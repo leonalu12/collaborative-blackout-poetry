@@ -1,0 +1,43 @@
+# Exclude version control
+**/.git
+**/.gitignore
+
+# Node dependencies
+**/node_modules
+**/npm-debug.log
+
+# Build and cache
+**/dist
+**/build
+**/.cache
+**/.vite
+**/.next
+**/.turbo
+
+# IDE/editor files
+**/.vscode
+**/.idea
+**/*.swp
+
+# Docker & compose files (optional if you use them in CI only)
+**/docker-compose*
+**/compose.y*ml
+**/Dockerfile*
+
+# Project configs and local secrets
+**/.env
+**/.env.*
+**/secrets.dev.yaml
+**/values.dev.yaml
+**/password.txt
+**/run/secrets
+
+# Framework/tool specific
+**/obj
+**/*.dbmdl
+**/*.jfm
+**/*.*proj.user
+
+# Misc
+LICENSE
+README.md
