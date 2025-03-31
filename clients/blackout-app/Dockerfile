@@ -35,25 +35,16 @@ FROM base AS test
 
 ENV NODE_ENV=test
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --include=dev
+# Copy package files and install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev
 
-USER node
+# Copy the rest of the source code with proper ownership
 COPY --chown=node:node . .
 
+# (Optional) Ensure the working directory is writable:
 USER root
 RUN chmod -R u+w /usr/src/app
 
-USER root
-RUN --mount=type=cache,target=/root/.npm \
-    npm run build
-RUN --mount=type=cache,target=/root/.npm \
-    npm run lint
-RUN --mount=type=cache,target=/root/.npm \
-    npm run test
-# RUN --mount=type=cache,target=/root/.npm \
-#     npm run test:integration
-# RUN --mount=type=cache,target=/root/.npm \
-# RUN npm run test
+USER node
+RUN npm run test
