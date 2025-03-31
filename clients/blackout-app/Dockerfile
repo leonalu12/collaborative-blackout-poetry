@@ -42,4 +42,5 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 
 USER node
 COPY --chown=node:node . .
+RUN chmod -R u+w /usr/src/app
 RUN npm run test
