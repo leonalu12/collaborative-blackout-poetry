@@ -54,3 +54,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ vars.DOCKER_USERNAME }}/blackout-app:0.0.${{ github.run_number }}
+
