@@ -47,4 +47,5 @@ USER root
 RUN chmod -R u+w /usr/src/app
 
 USER node
-RUN npm run test
+COPY --chown=node:node . .
+CMD ["npm", "run", "test"]
