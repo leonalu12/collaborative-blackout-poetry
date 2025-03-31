@@ -24,8 +24,8 @@ jobs:
       - name: Build and test
         uses: docker/build-push-action@v6
         with:
-          context: ./servers/blackout-app
-          file: ./servers/blackout-app/Dockerfile
+          context: ./clients/blackout-app
+          file: ./clients/blackout-app/Dockerfile
           target: test
           load: true
 
