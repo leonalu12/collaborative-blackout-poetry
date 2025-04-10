@@ -31,6 +31,7 @@ Make sure you have the following installed **before** running the project:
 - [Docker](https://www.docker.com/products/docker-desktop) & Docker Desktop
 - [Node.js](https://nodejs.org/en/download) (v20.x recommended)
 - [MongoDB](https://www.mongodb.com/try/download/community) (for local development outside Docker, optional)
+- [MongoDBCompass](https://www.mongodb.com/try/download/compass) (Helpfull to connect to DB and check tables)
 
 
 ### 📌 Prerequisites
@@ -77,13 +78,14 @@ npm install
 ### 🐳 Run Entire Stack with Docker Compose
 
 ```bash
-docker compose up --build
+docker compose up --build --no-cache
 ```
-#### When done and want to quit use:
 
+#### Populate the database with sample data use
 ```bash
-docker compose down
+docker exec -it group_project-blackout-db-1 npm run seed
 ```
+This will add sample data to your database, only run for testing
 
 Access your services:
 
@@ -92,6 +94,12 @@ Access your services:
 | Blackout App   | http://localhost:5173           |
 | Blackout DB    | http://localhost:5000           |
 | MongoDB        | mongodb://localhost:27017       |
+
+#### When done and want to quit use:
+
+```bash
+docker compose down
+```
 
 ### 🧪 Running Tests
 
@@ -131,7 +139,7 @@ PORT=5000
 MONGO_URI=mongodb://mongo:27017/blackout-db
 ```
 
-> 🔒 This file is excluded from version control via `.gitignore`.
+> 🔒 This file is excluded from version control via `.gitignore` and `.dockerignore`.
 
 ---
 
