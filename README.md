@@ -58,10 +58,31 @@ blackout-project/
 
 ## 🖥️ Local Development
 
+## 📦 Installing Dependencies (Locally Without Docker)
+
+To install the Node.js dependencies for local development or troubleshooting (outside Docker), run:
+
+```bash
+# From the root directory, for blackout-db server:
+cd servers/blackout-db
+npm install
+
+# For blackout-app client:
+cd ../../clients/blackout-app
+npm install
+```
+
+---
+
 ### 🐳 Run Entire Stack with Docker Compose
 
 ```bash
-docker compose --build up
+docker compose up --build
+```
+#### When done and want to quit use:
+
+```bash
+docker compose down
 ```
 
 Access your services:
@@ -111,22 +132,6 @@ MONGO_URI=mongodb://mongo:27017/blackout-db
 ```
 
 > 🔒 This file is excluded from version control via `.gitignore`.
-
----
-
-## 📦 Installing Dependencies (Locally Without Docker)
-
-To install the Node.js dependencies for local development or troubleshooting (outside Docker), run:
-
-```bash
-# From the root directory, for blackout-db server:
-cd servers/blackout-db
-npm install
-
-# For blackout-app client:
-cd ../../clients/blackout-app
-npm install
-```
 
 ---
 
