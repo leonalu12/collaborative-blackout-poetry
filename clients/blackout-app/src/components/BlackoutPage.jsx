@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ColorPicker from './ColorPicker';
 import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
+import UploadArticle from './CreationArea/UploadArticle';
 import '../BlackoutPage.css';
 
 export default function BlackoutPage() {
@@ -10,6 +11,9 @@ export default function BlackoutPage() {
   const [formattedText, setFormattedText] = useState('');
   const [selectedColor, setSelectedColor] = useState('black');
   const [isBlackout, setIsBlackout] = useState(false);
+  const [showUploadPopup, setShowUploadPopup] = useState(false);
+
+  const fileInputRef = useRef();
 
   const handleBlackout = () => {
     if (!isBlackout) {
@@ -26,8 +30,15 @@ export default function BlackoutPage() {
   const handleLoadExample = () => {
     const newText = 'Every word you blackout reveals a new layer of meaning.';
     setRawText(newText);
-    setFormattedText(newText);
+    setFormattedText('');
     setIsBlackout(false);
+  };
+
+  const handleUploadText = (text) => {
+    setRawText(text);
+    setFormattedText('');
+    setIsBlackout(false);
+    setShowUploadPopup(false); // Close the popup after confirmation
   };
 
   return (
@@ -40,14 +51,26 @@ export default function BlackoutPage() {
       <div className="editor-area">
         <div className="top-buttons">
           <button className="round-btn" onClick={handleLoadExample}>Get Random Poem</button>
-          <button className="round-btn">Upload your own article</button>
+          <button className="round-btn" onClick={() => setShowUploadPopup(true)}>
+            Upload your own article
+          </button>
         </div>
+
+        {showUploadPopup && (
+          <div className="upload-popup">
+            <div className="upload-popup-content">
+              <h3>Upload a .txt file</h3>
+              <UploadArticle ref={fileInputRef} onConfirm={handleUploadText} />
+              <button className="close-btn" onClick={() => setShowUploadPopup(false)}>Close</button>
+            </div>
+          </div>
+        )}
 
         <TextInputPanel
           value={rawText}
           onChange={(e) => {
             setRawText(e.target.value);
-            setFormattedText(e.target.value);
+            setFormattedText('');
             setIsBlackout(false);
           }}
           onSubmit={() => {}}
