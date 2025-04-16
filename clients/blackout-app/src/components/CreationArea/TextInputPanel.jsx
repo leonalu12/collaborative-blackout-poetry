@@ -9,8 +9,9 @@ export default function TextInputPanel({ value, onChange, onSubmit }) {
         onChange={onChange}
         placeholder="Enter or paste your text here..."
       />
-      <button className="enter-text-btn" onClick={onSubmit}>
-        Enter Custom Text
+      <button className="enter-text-btn" onClick={() => 
+        onSubmit(value)} >
+        Submit the custom text to editor
       </button>
     </div>
   );

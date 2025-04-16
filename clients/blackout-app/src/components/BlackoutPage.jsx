@@ -46,6 +46,14 @@ export default function BlackoutPage() {
     setShowUploadPopup(false); // Close the popup after confirmation
   };
 
+  const handleSubmitInputText = (text) => {
+    if (!text) return;
+    // Check if the text is empty or contains only whitespace
+    setRawText(text);
+    setFormattedText(text);
+    setIsBlackout(false);
+  }
+
   return (
     <div className="blackout-page">
       <div className="sidebar">
@@ -75,10 +83,8 @@ export default function BlackoutPage() {
           value={rawText}
           onChange={(e) => {
             setRawText(e.target.value);
-            setFormattedText('');
-            setIsBlackout(false);
           }}
-          onSubmit={() => {}}
+          onSubmit={handleSubmitInputText }
         />
 
         <ColorPicker onColorChange={setSelectedColor} />
