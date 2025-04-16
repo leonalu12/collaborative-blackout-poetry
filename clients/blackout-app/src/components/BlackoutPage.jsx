@@ -4,6 +4,8 @@ import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
 import UploadArticle from './CreationArea/UploadArticle';
+
+import SaveModal from './SaveModal/SaveModal';
 import '../BlackoutPage.css';
 
 export default function BlackoutPage() {
@@ -12,6 +14,8 @@ export default function BlackoutPage() {
   const [selectedColor, setSelectedColor] = useState('black');
   const [isBlackout, setIsBlackout] = useState(false);
   const [showUploadPopup, setShowUploadPopup] = useState(false);
+
+  const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
 
   const fileInputRef = useRef();
 
@@ -33,6 +37,7 @@ export default function BlackoutPage() {
     setFormattedText('');
     setIsBlackout(false);
   };
+
 
   const handleUploadText = (text) => {
     setRawText(text);
@@ -85,9 +90,15 @@ export default function BlackoutPage() {
         <CreationControls
           isBlackout={isBlackout}
           onBlackout={handleBlackout}
-          onSave={() => alert('Not implemented yet')}
+          onSave={() => setShowSaveConfirmation(true)}
         />
       </div>
+
+      {/* Save confirmation popup */}
+      <SaveModal
+        isOpen={showSaveConfirmation}
+        onClose={() => setShowSaveConfirmation(false)}
+      />
     </div>
   );
 }
