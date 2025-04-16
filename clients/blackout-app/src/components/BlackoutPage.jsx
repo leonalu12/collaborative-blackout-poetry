@@ -5,7 +5,6 @@ import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
 import UploadArticle from './CreationArea/UploadArticle';
 
-
 import SaveModal from './SaveModal/SaveModal';
 import '../BlackoutPage.css';
 

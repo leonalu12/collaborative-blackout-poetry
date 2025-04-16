@@ -181,7 +181,6 @@
 }
 
 
-
 .word:hover {
  text-decoration: underline;
   cursor: pointer;
@@ -202,5 +201,4 @@
 
 .word{
   vertical-align: bottom;
-  margin: -1px -1px; /* 消除上下间距 */
 }
