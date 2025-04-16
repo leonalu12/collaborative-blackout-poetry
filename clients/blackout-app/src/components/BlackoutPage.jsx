@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import ColorPicker from './ColorPicker';
 import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
 import UploadArticle from './CreationArea/UploadArticle';
+
 
 import SaveModal from './SaveModal/SaveModal';
 import '../BlackoutPage.css';
@@ -18,18 +19,52 @@ export default function BlackoutPage() {
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
 
   const fileInputRef = useRef();
+  const [words, setWords] = useState([]);
 
-  const handleBlackout = () => {
-    if (!isBlackout) {
-      const result = rawText.split(' ').map(
-        word => `<span style="background-color:${selectedColor};color:${selectedColor};padding:2px;">${word}</span>`
-      ).join(' ');
-      setFormattedText(result);
-    } else {
-      setFormattedText(rawText);
+  // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
+  const initializeText = (text) => {
+    const tokens = text.match(/\w+|[^\w\s]|[\s]+/gu) || [];
+    //\w+：连续的字母数字（即单词）[^\w\s]：非字母数字、非空格的符号（例如 , . ! ?）[\s]+：连续的空格、换行、制表符等
+    return tokens.map((token, index) => ({
+      id: index,
+      text: token,
+      isBlackout: false,
+      isSelected: false,
+      selectedColor: selectedColor,
+    }))
     }
-    setIsBlackout(!isBlackout);
-  };
+// This function is called when the component mounts or when the formattedText changes.
+  useEffect(() => {
+    setWords(initializeText(formattedText));
+  }, [formattedText]);
+
+  // This function is called when the user clicks on a word in the preview panel.
+    const handleWordClick = (wordId) => {
+      if(isBlackout) return; // Do nothing if blackout is active
+      setWords(words.map(word => 
+        word.id === wordId ? { ...word, isSelected: !word.isSelected } : word)
+         // Toggle the selected state of the clicked word
+      ); 
+    };
+
+// This function is called when a word is clicked. It toggles the blackout state of the selected word.
+    const handleBlackout = () => {
+        const updatedWords = words.map(word => {
+          if(isBlackout){
+            //已涂黑，取消单词涂黑
+            return{ ...word, isBlackout: false };
+          }else{
+            //未涂黑，涂黑单词
+            return word.isSelected
+            ? { ...word, isBlackout: false } // Keep selected words
+            : { ...word, isBlackout: true }; // Blackout everything else
+          }
+        });
+        //rerender the component with the updated words
+        setWords(updatedWords);
+        setIsBlackout(!isBlackout);// Toggle the blackout state
+    }
+    
 
   const handleLoadExample = () => {
     const newText = 'Every word you blackout reveals a new layer of meaning.';
@@ -92,7 +127,12 @@ export default function BlackoutPage() {
       </div>
 
       <div className="preview-area">
-        <PreviewPanel html={formattedText} />
+        <PreviewPanel 
+        words={words} 
+        onWordClick={handleWordClick}
+        selectedColor={selectedColor}//选中的边框颜色
+        isBlackout={isBlackout}
+        />
         <CreationControls
           isBlackout={isBlackout}
           onBlackout={handleBlackout}
