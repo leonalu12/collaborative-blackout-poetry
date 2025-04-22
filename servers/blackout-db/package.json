@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
     "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
     "seed": "node seed.js",
-    "dev": "nodemon src/server.js"
+    "test": "jest --detectOpenHandles --forceExit"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,12 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.1.9"
+    "mongodb-memory-server": "^10.1.4",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.0"
+  },
+  "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/setup/setupTestEnv.js"],
+    "testEnvironment": "node"
   }
 }

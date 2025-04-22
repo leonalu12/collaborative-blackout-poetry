@@ -28,18 +28,15 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 
 USER node
 COPY --chown=node:node . .
-CMD ["npm", "run", "preview"]
+CMD ["node", "src/server.js"]
 
-# Test image
-FROM base AS test
 
+FROM node:20-alpine AS test
+
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm ci --include=dev
+
+COPY . .
 ENV NODE_ENV=test
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --include=dev
-
-USER node
-COPY --chown=node:node . .
-RUN npm run test
+CMD ["npm", "test"]

@@ -31,12 +31,16 @@
 **/values.dev.yaml
 **/password.txt
 **/run/secrets
+**/__tests__/
+**/*.test.js
+**/jest.config.js
 
 # Framework/tool specific
 **/obj
 **/*.dbmdl
 **/*.jfm
 **/*.*proj.user
+**/coverage
 
 # Misc
 LICENSE

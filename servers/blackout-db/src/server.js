@@ -1,19 +1,32 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('../config/blackout-db');
+const userRoutes = require('../routes/userRoutes');
+const documentRoutes = require('../routes/documentRoutes');
+const commentRoutes = require('../routes/commentRoutes');
+const communityRoutes = require('../routes/communityRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Connect to MongoDB
-connectDB();
-
-// Middleware to parse JSON requests
+// Middleware
 app.use(express.json());
 
-// A simple test route
+// Routes
 app.get('/', (req, res) => {
   res.json({ message: "Hello from Express and MongoDB!" });
 });
+app.use('/api/users', userRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/community', communityRoutes);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Only start the server if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  connectDB().then(() => {
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  });
+}
+
+// Export app for testing
+module.exports = app;
