@@ -71,6 +71,29 @@ async function seed() {
     collaborators: [alice._id], // Even though it's public, Alice is listed as a collaborator
     state: 'public', // Public document
   });
+  const blackout4 = await BlackoutDocument.create({
+    documentName: 'Public Poem A',
+    content: 'The rain falls gently on the leaves...',
+    blackoutContent: '',
+    collaborators: [bob._id],
+    state: 'public',
+  });
+  
+  const blackout5 = await BlackoutDocument.create({
+    documentName: 'Public Poem B',
+    content: 'Night whispers secrets to the stars...',
+    blackoutContent: '',
+    collaborators: [charlie._id],
+    state: 'public',
+  });
+  
+  const blackout6 = await BlackoutDocument.create({
+    documentName: 'Public Poem C',
+    content: 'Beneath the moon, the waves still sing...',
+    blackoutContent: '',
+    collaborators: [],
+    state: 'public',
+  });
 
   // Create a community interaction for blackout2
   const interaction2 = await CommunityInteraction.create({

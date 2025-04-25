@@ -1,4 +1,11 @@
+console.log('✅ /api/random router loaded');
+
+
 require('dotenv').config();
+
+const cors = require('cors');
+
+
 const express = require('express');
 const connectDB = require('../config/blackout-db');
 const userRoutes = require('../routes/userRoutes');
@@ -6,11 +13,21 @@ const documentRoutes = require('../routes/documentRoutes');
 const commentRoutes = require('../routes/commentRoutes');
 const communityRoutes = require('../routes/communityRoutes');
 
+//cindy：
+const randomDocumentRoutes = require('./routes/documents');
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
+
+
 
 // Middleware
 app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173", // 允许前端域名
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+})); 
 
 // Routes
 app.get('/', (req, res) => {
@@ -20,6 +37,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/community', communityRoutes);
+
+// 专门单独管理 random
+
+app.use('/api/random', randomDocumentRoutes); 
 
 // Only start the server if not in test environment
 if (process.env.NODE_ENV !== 'test') {

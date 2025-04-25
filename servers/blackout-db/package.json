@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.13.1"
@@ -24,7 +25,9 @@
     "supertest": "^7.1.0"
   },
   "jest": {
-    "setupFilesAfterEnv": ["<rootDir>/setup/setupTestEnv.js"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/setup/setupTestEnv.js"
+    ],
     "testEnvironment": "node"
   }
 }

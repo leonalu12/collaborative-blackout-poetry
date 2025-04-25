@@ -7,12 +7,20 @@ const {
   deleteDocument
 } = require('../controllers/documentController');
 
+
+
+
 const router = express.Router();
 
+
 router.get('/', getDocuments);
-router.get('/:id', getDocumentById);
+
 router.post('/', createDocument);
 router.put('/:id', updateDocument);
 router.delete('/:id', deleteDocument);
+
+router.get('/:id', getDocumentById);
+
+
 
 module.exports = router;
