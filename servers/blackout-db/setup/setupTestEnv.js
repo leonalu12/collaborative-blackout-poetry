@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 beforeAll(async () => {
   const uri = process.env.MONGO_URI || 'mongodb://mongo:27017/test-db';
   await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     dbName: 'test-db',
   });
 });

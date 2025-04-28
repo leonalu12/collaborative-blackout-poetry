@@ -58,10 +58,28 @@ const deleteDocument = async (req, res) => {
   }
 };
 
+// Get a random document
+const getRandomDocument = async (req, res) => {
+  try {
+    const randomDoc = await BlackoutDocument.aggregate([
+      { $match: { state: 'public' } }, 
+      { $sample: { size: 1 } }
+    ]);
+    if (!randomDoc.length) {
+      return res.status(404).json({ message: 'No documents found' });
+    }
+    res.json(randomDoc[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 module.exports = {
   getDocuments,
   getDocumentById,
   createDocument,
   updateDocument,
-  deleteDocument
+  deleteDocument,
+  getRandomDocument
 };

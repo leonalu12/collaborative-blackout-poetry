@@ -51,4 +51,19 @@ describe('BlackoutDocument API CRUD', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe('Document deleted');
   });
+
+  it('should return a random public document', async () => {
+
+    await BlackoutDocument.create([
+      { documentName: 'PublicDoc1', content: '...', blackoutContent: '...', state: 'public' },
+      { documentName: 'PublicDoc2', content: '...', blackoutContent: '...', state: 'public' }
+    ]);
+  
+    const res = await request(app).get('/api/documents/random');
+  
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('_id');
+    expect(res.body).toHaveProperty('documentName');
+    expect(res.body.state).toBe('public');
+  });
 });

@@ -4,7 +4,8 @@ const {
   getDocumentById,
   createDocument,
   updateDocument,
-  deleteDocument
+  deleteDocument,
+  getRandomDocument
 } = require('../controllers/documentController');
 
 
@@ -12,14 +13,15 @@ const {
 
 const router = express.Router();
 
-
+router.get('/random', getRandomDocument);
 router.get('/', getDocuments);
-
+router.get('/:id', getDocumentById);
 router.post('/', createDocument);
 router.put('/:id', updateDocument);
 router.delete('/:id', deleteDocument);
 
-router.get('/:id', getDocumentById);
+
+
 
 
 
