@@ -24,6 +24,11 @@ const getUserById = async (req, res) => {
 // CREATE a new user
 const createUser = async (req, res) => {
   try {
+    // Optional: Manually enforce password presence for clarity
+    if (!req.body.password) {
+      return res.status(400).json({ error: 'Password is required' });
+    }
+
     const newUser = new User(req.body);
     const saved = await newUser.save();
     res.status(201).json(saved);

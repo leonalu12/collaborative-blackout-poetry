@@ -1,14 +1,17 @@
 import React, { useState, useRef,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ColorPicker from './ColorPicker';
 import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
 import UploadArticle from './CreationArea/UploadArticle';
-
+import LogoutButton from './LogoutButton';
 import SaveModal from './SaveModal/SaveModal';
-import '../BlackoutPage.css';
+import logo from '../assets/logo_poem.png';
+import '../styles/BlackoutPage.css';
 
 export default function BlackoutPage() {
+  const navigate = useNavigate();
   const [rawText, setRawText] = useState('This is a sample text for blackout. You can edit or replace it.');
   const [formattedText, setFormattedText] = useState('');
   const [selectedColor, setSelectedColor] = useState('black');
@@ -19,6 +22,10 @@ export default function BlackoutPage() {
 
   const fileInputRef = useRef();
   const [words, setWords] = useState([]);
+
+    useEffect(() => {
+      document.title = 'Blackout App';
+    }, []);
 
   // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
   const initializeText = (text) => {
@@ -89,61 +96,70 @@ export default function BlackoutPage() {
   }
 
   return (
-    <div className="blackout-page">
-      <div className="sidebar">
-        <button className="nav-btn active">Blackout</button>
-        <button className="nav-btn">Gallery</button>
-      </div>
-
-      <div className="editor-area">
-        <div className="top-buttons">
-          <button className="round-btn" onClick={handleLoadExample}>Get Random Poem</button>
-          <button className="round-btn" onClick={() => setShowUploadPopup(true)}>
-            Upload your own article
-          </button>
+    <div className="blackout-wrapper">
+      <header className="blackout-header">
+        <div className="header-left">
+          <img src={logo} alt="Logo" className="header-logo" />
+          <h1 className="header-title">Blackout Poem</h1>
+        </div>
+        <LogoutButton />
+      </header>
+      <div className="blackout-page">
+        <div className="sidebar">
+          <button className="nav-btn active">Blackout</button>
+          <button className="nav-btn">Gallery</button>
         </div>
 
-        {showUploadPopup && (
-          <div className="upload-popup">
-            <div className="upload-popup-content">
-              <h3>Upload a .txt file</h3>
-              <UploadArticle ref={fileInputRef} onConfirm={handleUploadText} />
-              <button className="close-btn" onClick={() => setShowUploadPopup(false)}>Close</button>
-            </div>
+        <div className="editor-area">
+          <div className="top-buttons">
+            <button className="round-btn" onClick={handleLoadExample}>Get Random Poem</button>
+            <button className="round-btn" onClick={() => setShowUploadPopup(true)}>
+              Upload your own article
+            </button>
           </div>
-        )}
 
-        <TextInputPanel
-          value={rawText}
-          onChange={(e) => {
-            setRawText(e.target.value);
-          }}
-          onSubmit={handleSubmitInputText }
-        />
+          {showUploadPopup && (
+            <div className="upload-popup">
+              <div className="upload-popup-content">
+                <h3>Upload a .txt file</h3>
+                <UploadArticle ref={fileInputRef} onConfirm={handleUploadText} />
+                <button className="close-btn" onClick={() => setShowUploadPopup(false)}>Close</button>
+              </div>
+            </div>
+          )}
 
-        <ColorPicker onColorChange={setSelectedColor} />
-        <button className="custom-color-btn">Your Color</button>
-      </div>
+          <TextInputPanel
+            value={rawText}
+            onChange={(e) => {
+              setRawText(e.target.value);
+            }}
+            onSubmit={handleSubmitInputText }
+          />
 
-      <div className="preview-area">
-        <PreviewPanel 
-        words={words} 
-        onWordClick={handleWordClick}
-        selectedColor={selectedColor}//选中的边框颜色
-        isBlackout={isBlackout}
-        />
-        <CreationControls
+          <ColorPicker onColorChange={setSelectedColor} />
+          <button className="custom-color-btn">Your Color</button>
+        </div>
+
+        <div className="preview-area">
+          <PreviewPanel 
+          words={words} 
+          onWordClick={handleWordClick}
+          selectedColor={selectedColor}//选中的边框颜色
           isBlackout={isBlackout}
-          onBlackout={handleBlackout}
-          onSave={() => setShowSaveConfirmation(true)}
+          />
+          <CreationControls
+            isBlackout={isBlackout}
+            onBlackout={handleBlackout}
+            onSave={() => setShowSaveConfirmation(true)}
+          />
+        </div>
+
+        {/* Save confirmation popup */}
+        <SaveModal
+          isOpen={showSaveConfirmation}
+          onClose={() => setShowSaveConfirmation(false)}
         />
       </div>
-
-      {/* Save confirmation popup */}
-      <SaveModal
-        isOpen={showSaveConfirmation}
-        onClose={() => setShowSaveConfirmation(false)}
-      />
     </div>
   );
 }
