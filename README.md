@@ -137,6 +137,7 @@ The `blackout-db` server uses a `.env` file to manage environment variables. Thi
 ```env
 PORT=5000
 MONGO_URI=mongodb://mongo:27017/blackout-db
+OPENAI_API_KEY= (key provided on submition)
 ```
 
 > 🔒 This file is excluded from version control via `.gitignore` and `.dockerignore`.

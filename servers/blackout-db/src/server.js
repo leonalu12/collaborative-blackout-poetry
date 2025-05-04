@@ -10,6 +10,7 @@ const documentRoutes = require('../routes/documentRoutes');
 const commentRoutes = require('../routes/commentRoutes');
 const communityRoutes = require('../routes/communityRoutes');
 const authRoutes = require('../routes/authRoutes');
+const generateRoutes = require('../routes/generateRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,6 +35,7 @@ app.use('/api/auth', authRoutes);   // For login/signup
 app.use('/api/documents', documentRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/community', communityRoutes);
+app.use('/api/generate', generateRoutes); // For text generation
 
 
 // Only start the server if not in test environment

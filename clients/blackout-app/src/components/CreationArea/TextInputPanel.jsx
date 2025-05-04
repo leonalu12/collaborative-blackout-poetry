@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function TextInputPanel({ value, onChange, onSubmit }) {
+export default function TextInputPanel({
+  value,
+  onChange,
+  onSubmit,
+  onGenerate,
+  isGenerating,      // new
+}) {
   return (
     <div className="text-box">
       <textarea
@@ -9,10 +15,21 @@ export default function TextInputPanel({ value, onChange, onSubmit }) {
         onChange={onChange}
         placeholder="Enter or paste your text here..."
       />
-      <button className="enter-text-btn" onClick={() => 
-        onSubmit(value)} >
-        Submit the custom text to editor
-      </button>
+      <div className="button-group" style={{ display: 'flex', gap: '0.5rem' }}>
+        <button
+          className="generate-btn"
+          onClick={onGenerate}
+          disabled={isGenerating}
+        >
+          {isGenerating ? "Generating…" : "Generate with ChatGPT"}
+        </button>
+        <button
+          className="enter-text-btn"
+          onClick={() => onSubmit(value)}
+        >
+          Submit to Editor
+        </button>
+      </div>
     </div>
   );
 }

@@ -16,6 +16,7 @@ export default function BlackoutPage() {
   const [formattedText, setFormattedText] = useState('');
   const [selectedColor, setSelectedColor] = useState('black');
   const [isBlackout, setIsBlackout] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [showUploadPopup, setShowUploadPopup] = useState(false);
 
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
@@ -95,6 +96,29 @@ export default function BlackoutPage() {
     setIsBlackout(false);
   }
 
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      const resp = await fetch("http://localhost:5050/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!resp.ok) {
+        const err = await resp.json();
+        throw new Error(err.error || resp.statusText);
+      }
+      const { text } = await resp.json();
+      setRawText(text);
+      setFormattedText("");
+      setIsBlackout(false);
+    } catch (err) {
+      console.error("Generation failed:", err);
+      // TODO: show a UI toast or inline error message
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="blackout-wrapper">
       <header className="blackout-header">
@@ -129,11 +153,11 @@ export default function BlackoutPage() {
           )}
 
           <TextInputPanel
-            value={rawText}
-            onChange={(e) => {
-              setRawText(e.target.value);
-            }}
-            onSubmit={handleSubmitInputText }
+                  value={rawText}
+                  onChange={e => setRawText(e.target.value)}
+                  onSubmit={handleSubmitInputText}
+                  onGenerate={handleGenerate}
+                  isGenerating={isGenerating}
           />
 
           <ColorPicker onColorChange={setSelectedColor} />
