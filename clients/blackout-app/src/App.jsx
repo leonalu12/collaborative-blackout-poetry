@@ -2,6 +2,7 @@ import './App.css'
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BlackoutPage from './components/BlackoutPage';
+import GalleryPage from './components/GalleryPage';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -23,14 +24,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route 
-           path="/gallery" 
-           element={
-             <ProtectedRoute>
+        <Route
+          path="/gallery"
+          element={
+            <ProtectedRoute>
               <GalleryPage />
-             </ProtectedRoute>
-           } 
-         />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

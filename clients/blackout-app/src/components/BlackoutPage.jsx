@@ -21,7 +21,6 @@ export default function BlackoutPage() {
 
   const [showUploadPopup, setShowUploadPopup] = useState(false);
 
-  const navigate = useNavigate();
 
 
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
