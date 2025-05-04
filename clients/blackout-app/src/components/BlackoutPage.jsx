@@ -10,6 +10,7 @@ import SaveModal from './SaveModal/SaveModal';
 import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
 
+
 export default function BlackoutPage() {
   const navigate = useNavigate();
   const [rawText, setRawText] = useState('This is a sample text for blackout. You can edit or replace it.');
@@ -17,7 +18,11 @@ export default function BlackoutPage() {
   const [selectedColor, setSelectedColor] = useState('black');
   const [isBlackout, setIsBlackout] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+
   const [showUploadPopup, setShowUploadPopup] = useState(false);
+
+  const navigate = useNavigate();
+
 
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
 
@@ -131,7 +136,7 @@ export default function BlackoutPage() {
       <div className="blackout-page">
         <div className="sidebar">
           <button className="nav-btn active">Blackout</button>
-          <button className="nav-btn">Gallery</button>
+          <button className="nav-btn" onClick={() => navigate('/gallery')}>Gallery</button>
         </div>
 
         <div className="editor-area">

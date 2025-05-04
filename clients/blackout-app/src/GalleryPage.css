@@ -1,0 +1,148 @@
+/* GalleryPage.css */
+
+.gallery-page {
+  display: flex;
+  height: 100vh;
+  font-family: 'Comic Sans MS', sans-serif;
+  background-color: #c9f0ff;
+}
+
+/* 左侧按钮栏 */
+.sidebar {
+  width: 120px;
+  background-color: #c9f0ff;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  gap: 1em;
+}
+
+.nav-btn {
+  background-color: #79c9ff;
+  border: none;
+  padding: 0.6em;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.nav-btn.active {
+  background-color: white;
+  color: black;
+}
+
+/* 右侧内容区 */
+.content-area {
+  flex: 1;
+  padding: 2em;
+}
+
+.content-area h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* 白色卡片容器 */
+.gallery-content-box {
+  position: relative;            /* 定位上下文 */
+  background-color: white;
+  padding: 2em 2em 3.5em 2em;
+  border-radius: 15px;
+  margin-top: 1em;
+  /* 固定尺寸 */
+  width: 700px;
+  height: 400px;
+  /* 小阴影 */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 卡片网格：3 列 × 2 行 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 180px); 
+  grid-template-rows: repeat(2, 180px);     
+  gap: 1em;
+  justify-content: center; /* 水平居中整个卡片区域 */
+}
+
+/* 单张卡片 */
+.doc-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+}
+
+.doc-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.doc-card p {
+  margin: 0.3em 0;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-type {
+  font-size: 0.75rem;
+  color: gray;
+  text-align: right;
+}
+
+/* 分页按钮栏 */
+.pagination {
+  position: absolute;       /* 脱离文档流 */
+  bottom: 1em;              /* 距离白框底部 1em */
+  left: 50%;                /* 水平居中 */
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 分页按钮 */
+.pagination li {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  font-size: 0.95rem;
+  border: 1px solid #79c9ff;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  font-family: 'Comic Sans MS', sans-serif;
+}
+
+.pagination .active-page {
+  background-color: #79c9ff;
+  color: white;
+}
+
+.delete-btn {     /*delete card删除卡片*/
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.delete-btn:hover {
+  color: red;
+}

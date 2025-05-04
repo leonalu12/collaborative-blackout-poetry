@@ -23,6 +23,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route 
+           path="/gallery" 
+           element={
+             <ProtectedRoute>
+              <GalleryPage />
+             </ProtectedRoute>
+           } 
+         />
       </Routes>
     </Router>
   );
