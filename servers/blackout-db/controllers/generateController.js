@@ -8,10 +8,10 @@ async function generateText(req, res) {
       model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
-        { role: "user",   content: "Generate a 5 sentence paragraph, evocative piece of text suitable for a blackout poem." }
+        { role: "user",   content: "Generate a 4 sentence paragraph, evocative piece of text suitable for a blackout poem." }
       ],
       max_tokens: 200,
-      temperature: 0.8,
+      temperature: 1,
     });
 
     const text = chat.choices[0].message.content.trim();

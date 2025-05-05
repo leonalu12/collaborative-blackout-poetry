@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server');
+const { app }  = require('../server');
 const BlackoutDocument = require('../../models/BlackoutDocument');
 
 describe('BlackoutDocument API CRUD', () => {
@@ -50,6 +50,46 @@ describe('BlackoutDocument API CRUD', () => {
     const res = await request(app).delete(`/api/documents/${created._id}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe('Document deleted');
+  });
+
+  it('should add a blackout word to a document', async () => {
+    const doc = await BlackoutDocument.create({
+      documentName: 'WithWords',
+      content: 'This is a test document',
+      state: 'draft'
+    });
+  
+    const res = await request(app)
+      .post(`/api/documents/${doc._id}/blackout`)
+      .send({
+        index: 2,
+        length: 1,
+        createdBy: null // replace with valid user ID if auth is enforced
+      });
+  
+    expect(res.statusCode).toBe(200);
+    expect(res.body.blackoutWords.length).toBe(1);
+    expect(res.body.blackoutWords[0].index).toBe(2);
+  });
+
+  it('should remove a blackout word from a document', async () => {
+    const doc = await BlackoutDocument.create({
+      documentName: 'RemoveTestDoc',
+      content: 'Another test sentence for blackout.',
+      blackoutWords: [
+        { index: 5, length: 1, createdBy: null }
+      ],
+      state: 'draft'
+    });
+  
+    const res = await request(app)
+      .delete(`/api/documents/${doc._id}/blackout`)
+      .send({
+        index: 5
+      });
+  
+    expect(res.statusCode).toBe(200);
+    expect(res.body.blackoutWords.length).toBe(0);
   });
 
   it('should return a random public document', async () => {

@@ -1,0 +1,50 @@
+.blackout-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.blackout-sidebar button {
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  width: 140px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.blackout-sidebar button:hover {
+  background-color: #444;
+}
+
+/* Special styling for Exit Room button */
+.blackout-sidebar .exit-button {
+  background-color: #cc3333;
+}
+
+.blackout-sidebar .exit-button:hover {
+  background-color: #a60000;
+}
+
+.blackout-sidebar input {
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  width: 140px;
+  text-align: center;
+}
+
+.room-id {
+  color: black;
+  font-weight: bold;
+  font-size: 0.95rem;
+  text-align: center;
+}

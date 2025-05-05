@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server');
+const { app }  = require('../server');
 const CommunityInteraction = require('../../models/CommunityInteraction');
 const Comment = require('../../models/Comment');
 

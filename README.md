@@ -107,7 +107,7 @@ Run tests for specific services:
 
 ```bash
 docker compose run blackout-app npm run test
-docker compose run blackout-db npm run test
+docker compose up --build blackout-db-test
 ```
 
 ---

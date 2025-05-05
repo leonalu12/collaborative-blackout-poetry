@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../server');
+const { app } = require('../server');
 const User = require('../../models/User');
 
 describe('Auth API - Signup and Login', () => {

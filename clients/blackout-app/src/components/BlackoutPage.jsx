@@ -6,6 +6,7 @@ import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
 import UploadArticle from './CreationArea/UploadArticle';
 import LogoutButton from './LogoutButton';
+import BlackoutEditor from './BlackoutEditor';
 import SaveModal from './SaveModal/SaveModal';
 import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
@@ -130,12 +131,16 @@ export default function BlackoutPage() {
           <img src={logo} alt="Logo" className="header-logo" />
           <h1 className="header-title">Blackout Poem</h1>
         </div>
+
         <LogoutButton />
       </header>
       <div className="blackout-page">
         <div className="sidebar">
           <button className="nav-btn active">Blackout</button>
           <button className="nav-btn" onClick={() => navigate('/gallery')}>Gallery</button>
+          <div>
+          <BlackoutEditor />
+        </div>
         </div>
 
         <div className="editor-area">

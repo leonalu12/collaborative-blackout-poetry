@@ -58,6 +58,50 @@ const deleteDocument = async (req, res) => {
   }
 };
 
+const addBlackoutWord = async (req, res) => {
+  const { index, length = 1, createdBy } = req.body;
+  const documentId = req.params.id;
+
+  try {
+    const updated = await BlackoutDocument.findByIdAndUpdate(
+      documentId,
+      {
+        $push: {
+          blackoutWords: {
+            index,
+            length,
+            createdBy
+          }
+        },
+        $set: { updatedAt: new Date() }
+      },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const removeBlackoutWord = async (req, res) => {
+  const { index } = req.body;
+  const documentId = req.params.id;
+
+  try {
+    const updated = await BlackoutDocument.findByIdAndUpdate(
+      documentId,
+      {
+        $pull: { blackoutWords: { index } },
+        $set: { updatedAt: new Date() }
+      },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
 // Get a random document
 const getRandomDocument = async (req, res) => {
   try {
@@ -81,5 +125,7 @@ module.exports = {
   createDocument,
   updateDocument,
   deleteDocument,
+  addBlackoutWord,
+  removeBlackoutWord,
   getRandomDocument
 };
