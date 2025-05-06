@@ -1,9 +1,15 @@
 import React from 'react';
+import { useBlackout  } from '../../context/BlackoutContext'; // Import the BlackoutContext to access the blackout state and functions
 
-export default function PreviewPanel({words, onWordClick, selectedColor, isBlackout}) {
+export default function PreviewPanel({ onWordClick}) {
   // This component is responsible for displaying the preview of the blackout text.
-  // It receives the words array and a function to handle word clicks as props.
-  return (
+ // It receives the words array and a function to handle word clicks as props.
+ const{
+  words,
+  selectedColor
+ } = useBlackout();
+ 
+ return (
     <div className="preview-box">
     {/* style={{ backgroundColor: isBlackout ? 'black' : '#87f0df' }} */}
       {words.map((word,idx) => (

@@ -1,12 +1,17 @@
 import React from 'react';
+import { useBlackout } from '../../context/BlackoutContext'; // Import the BlackoutContext to access the blackout state and functions
 
 export default function TextInputPanel({
   value,
   onChange,
   onSubmit,
   onGenerate,
-  isGenerating,      // new
 }) {
+const{
+  isGenerating,
+  isInGame} = useBlackout();
+
+
   return (
     <div className="text-box">
       <textarea
@@ -26,8 +31,9 @@ export default function TextInputPanel({
         <button
           className="enter-text-btn"
           onClick={() => onSubmit(value)}
+          disabled={isInGame} // Disable if in game mode
         >
-          Submit to Editor
+          {isInGame?"Cannot Change Articale in Game" : "Submit to Editor"}
         </button>
       </div>
     </div>

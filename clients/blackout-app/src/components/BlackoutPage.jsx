@@ -1,5 +1,6 @@
 import React, { useState, useRef,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useBlackout } from '../context/BlackoutContext';
 import ColorPicker from './ColorPicker';
 import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
@@ -10,28 +11,80 @@ import BlackoutEditor from './BlackoutEditor';
 import SaveModal from './SaveModal/SaveModal';
 import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
-
+import EndGameButton from './EndGameButton';
+import { io } from "socket.io-client";
 
 export default function BlackoutPage() {
   const navigate = useNavigate();
-  const [rawText, setRawText] = useState('This is a sample text for blackout. You can edit or replace it.');
-  const [formattedText, setFormattedText] = useState('');
-  const [selectedColor, setSelectedColor] = useState('black');
-  const [isBlackout, setIsBlackout] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const [showUploadPopup, setShowUploadPopup] = useState(false);
-
-
-
-  const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
+  const {
+    rawText,
+    setRawText,
+    formattedText,
+    setFormattedText,
+    selectedColor,
+    setSelectedColor,
+    isBlackout,
+    setIsBlackout,
+    isGenerating,
+    setIsGenerating,
+    isInGame,
+    setIsInGame,
+    showUploadPopup,
+    setShowUploadPopup,
+    showSaveConfirmation,
+    setShowSaveConfirmation,
+    words,
+    setWords,
+    roomId,
+    updateText,
+    updateWords,
+  } = useBlackout();
 
   const fileInputRef = useRef();
-  const [words, setWords] = useState([]);
+  const socket = useRef(null);
+   
+  // 正确初始化 socket
+  useEffect(() => {
+    // 创建 socket 连接
+    socket.current = io('http://localhost:5050', { 
+      withCredentials: true,
+    });
+        // 确保 socket 已连接
+        const onConnect = () => {
+          console.log('Socket connected');
+          setupSocketListeners();
+        };
+      // 确保只初始化一次
+      const handleRoomState = (roomState) => {
+        console.log('收到房间状态:', roomState);
+        setRawText(roomState.rawText);
+        setFormattedText(roomState.rawText);
+        setWords(roomState.words || initializeText(roomState.rawText));
+        setIsInGame(roomState.isInGame);
+      };
 
-    useEffect(() => {
-      document.title = 'Blackout App';
-    }, []);
+
+
+        const setupSocketListeners = () => {
+          if (!socket.current) return;
+    
+
+      socket.current.on('room-state', handleRoomState);
+      socket.current.on('text-updated', handleRoomState);
+      
+      socket.current.on('words-updated', (words) => {
+        console.log('收到单词更新:', words);
+        setWords(words); // 直接使用服务器发来的words
+      });}
+    
+      return () => {
+        if (socket.current) {// 断开连接时清除事件监听器
+          socket.current.off('room-state', handleRoomState);
+          socket.current.off('connect', onConnect);
+          socket.current.disconnect();
+      };
+      };
+  }, [setRawText, setFormattedText, setWords, setIsInGame]);
 
   // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
   const initializeText = (text) => {
@@ -53,10 +106,11 @@ export default function BlackoutPage() {
   // This function is called when the user clicks on a word in the preview panel.
     const handleWordClick = (wordId) => {
       if(isBlackout) return; // Do nothing if blackout is active
-      setWords(words.map(word => 
+      const newWords = words.map(word => 
         word.id === wordId ? { ...word, isSelected: !word.isSelected } : word)
          // Toggle the selected state of the clicked word
-      ); 
+      setWords(newWords);
+      updateWords(newWords); // 会自动触发Socket更新
     };
 
 // This function is called when a word is clicked. It toggles the blackout state of the selected word.
@@ -75,6 +129,10 @@ export default function BlackoutPage() {
         //rerender the component with the updated words
         setWords(updatedWords);
         setIsBlackout(!isBlackout);// Toggle the blackout state
+        socket.current.emit('blackout', { 
+          roomId, 
+          words: updatedWords,
+        });
     }
     
 
@@ -96,9 +154,12 @@ export default function BlackoutPage() {
   const handleSubmitInputText = (text) => {
     if (!text) return;
     // Check if the text is empty or contains only whitespace
+    updateText(text); // 会自动触发Socket更新
     setRawText(text);
     setFormattedText(text);
     setIsBlackout(false);
+    setIsInGame(true);// Set isInGame to true when text is submitted, cannot change texts.
+
   }
 
   const handleGenerate = async () => {
@@ -116,6 +177,11 @@ export default function BlackoutPage() {
       setRawText(text);
       setFormattedText("");
       setIsBlackout(false);
+
+      socket.current.emit('update-text', {
+        roomId,
+        text: text,
+      });
     } catch (err) {
       console.error("Generation failed:", err);
       // TODO: show a UI toast or inline error message
@@ -139,7 +205,7 @@ export default function BlackoutPage() {
           <button className="nav-btn active">Blackout</button>
           <button className="nav-btn" onClick={() => navigate('/gallery')}>Gallery</button>
           <div>
-          <BlackoutEditor />
+          <BlackoutEditor           />
         </div>
         </div>
 
@@ -166,7 +232,6 @@ export default function BlackoutPage() {
                   onChange={e => setRawText(e.target.value)}
                   onSubmit={handleSubmitInputText}
                   onGenerate={handleGenerate}
-                  isGenerating={isGenerating}
           />
 
           <ColorPicker onColorChange={setSelectedColor} />
@@ -175,16 +240,16 @@ export default function BlackoutPage() {
 
         <div className="preview-area">
           <PreviewPanel 
-          words={words} 
           onWordClick={handleWordClick}
-          selectedColor={selectedColor}//选中的边框颜色
-          isBlackout={isBlackout}
           />
           <CreationControls
             isBlackout={isBlackout}
             onBlackout={handleBlackout}
             onSave={() => setShowSaveConfirmation(true)}
           />
+          {isInGame && (
+            <EndGameButton />
+          )}
         </div>
 
         {/* Save confirmation popup */}

@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import '../styles/BlackoutEditor.css';
+import socket from '../utils/socket'; // Adjust the path as necessary
 
-const socket = io('http://localhost:5050', {
-    withCredentials: true
-  });
-
-function BlackoutEditor() {
+function BlackoutEditor( { words,rawText,isBlackout, isGenerating,isInGame }) {
   const [roomId, setRoomId] = useState('');
   const [joinedRoom, setJoinedRoom] = useState(false);
   const [blackoutData, setBlackoutData] = useState([]);
@@ -25,6 +21,20 @@ function BlackoutEditor() {
     };
   }, [joinedRoom]);
 
+  useEffect(() => {
+    if (!joinedRoom ) return;
+  
+    socket.emit('blackout-change', {
+      documentId: roomId,
+      words,
+      rawText,
+      isBlackout,
+      isInGame
+    });
+  }, [words, rawText, isBlackout, isInGame]);
+
+
+  
   const joinRoom = () => {
     if (!roomId.trim()) return;
     socket.emit('join-document', roomId);
