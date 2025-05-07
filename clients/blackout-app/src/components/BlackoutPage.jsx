@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBlackout } from '../context/BlackoutContext';
 import ColorPicker from './ColorPicker';
@@ -13,8 +13,12 @@ import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
 import EndGameButton from './EndGameButton';
 import { io } from "socket.io-client";
+import UploadImageOCR from './CreationArea/UploadImageOCR';
 
 export default function BlackoutPage() {
+  const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
+  const [tempImageText, setTempImageText] = useState('');
+
   const navigate = useNavigate();
   const {
     rawText,
@@ -42,48 +46,49 @@ export default function BlackoutPage() {
 
   const fileInputRef = useRef();
   const socket = useRef(null);
-   
+
   // 正确初始化 socket
   useEffect(() => {
     // 创建 socket 连接
-    socket.current = io('http://localhost:5050', { 
+    socket.current = io('http://localhost:5050', {
       withCredentials: true,
     });
-        // 确保 socket 已连接
-        const onConnect = () => {
-          console.log('Socket connected');
-          setupSocketListeners();
-        };
-      // 确保只初始化一次
-      const handleRoomState = (roomState) => {
-        console.log('收到房间状态:', roomState);
-        setRawText(roomState.rawText);
-        setFormattedText(roomState.rawText);
-        setWords(roomState.words || initializeText(roomState.rawText));
-        setIsInGame(roomState.isInGame);
-      };
+    // 确保 socket 已连接
+    const onConnect = () => {
+      console.log('Socket connected');
+      setupSocketListeners();
+    };
+    // 确保只初始化一次
+    const handleRoomState = (roomState) => {
+      console.log('收到房间状态:', roomState);
+      setRawText(roomState.rawText);
+      setFormattedText(roomState.rawText);
+      setWords(roomState.words || initializeText(roomState.rawText));
+      setIsInGame(roomState.isInGame);
+    };
 
 
 
-        const setupSocketListeners = () => {
-          if (!socket.current) return;
-    
+    const setupSocketListeners = () => {
+      if (!socket.current) return;
+
 
       socket.current.on('room-state', handleRoomState);
       socket.current.on('text-updated', handleRoomState);
-      
+
       socket.current.on('words-updated', (words) => {
         console.log('收到单词更新:', words);
         setWords(words); // 直接使用服务器发来的words
-      });}
-    
-      return () => {
-        if (socket.current) {// 断开连接时清除事件监听器
-          socket.current.off('room-state', handleRoomState);
-          socket.current.off('connect', onConnect);
-          socket.current.disconnect();
+      });
+    }
+
+    return () => {
+      if (socket.current) {// 断开连接时清除事件监听器
+        socket.current.off('room-state', handleRoomState);
+        socket.current.off('connect', onConnect);
+        socket.current.disconnect();
       };
-      };
+    };
   }, [setRawText, setFormattedText, setWords, setIsInGame]);
 
   // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
@@ -97,44 +102,43 @@ export default function BlackoutPage() {
       isSelected: false,
       selectedColor: selectedColor,
     }))
-    }
-// This function is called when the component mounts or when the formattedText changes.
+  }
+  // This function is called when the component mounts or when the formattedText changes.
   useEffect(() => {
     setWords(initializeText(formattedText));
   }, [formattedText]);
 
   // This function is called when the user clicks on a word in the preview panel.
-    const handleWordClick = (wordId) => {
-      if(isBlackout) return; // Do nothing if blackout is active
-      const newWords = words.map(word => 
-        word.id === wordId ? { ...word, isSelected: !word.isSelected } : word)
-         // Toggle the selected state of the clicked word
-      setWords(newWords);
-      updateWords(newWords); // 会自动触发Socket更新
-    };
+  const handleWordClick = (wordId) => {
+    if (isBlackout) return; // Do nothing if blackout is active
+    const newWords = words.map(word =>
+      word.id === wordId ? { ...word, isSelected: !word.isSelected } : word)
+    // Toggle the selected state of the clicked word
+    setWords(newWords);
+    updateWords(newWords); // 会自动触发Socket更新
+  };
 
-// This function is called when a word is clicked. It toggles the blackout state of the selected word.
-    const handleBlackout = () => {
-        const updatedWords = words.map(word => {
-          if(isBlackout){
-            //已涂黑，取消单词涂黑
-            return{ ...word, isBlackout: false };
-          }else{
-            //未涂黑，涂黑单词
-            return word.isSelected
-            ? { ...word, isBlackout: false } // Keep selected words
-            : { ...word, isBlackout: true }; // Blackout everything else
-          }
-        });
-        //rerender the component with the updated words
-        setWords(updatedWords);
-        setIsBlackout(!isBlackout);// Toggle the blackout state
-        socket.current.emit('blackout', { 
-          roomId, 
-          words: updatedWords,
-        });
-    }
-    
+  // This function is called when a word is clicked. It toggles the blackout state of the selected word.
+  const handleBlackout = () => {
+    const updatedWords = words.map(word => {
+      if (isBlackout) {
+        //已涂黑，取消单词涂黑
+        return { ...word, isBlackout: false };
+      } else {
+        //未涂黑，涂黑单词
+        return word.isSelected
+          ? { ...word, isBlackout: false } // Keep selected words
+          : { ...word, isBlackout: true }; // Blackout everything else
+      }
+    });
+    //rerender the component with the updated words
+    setWords(updatedWords);
+    setIsBlackout(!isBlackout);// Toggle the blackout state
+    socket.current.emit('blackout', {
+      roomId,
+      words: updatedWords,
+    });
+  }
 
   const handleLoadExample = () => {
     const newText = 'Every word you blackout reveals a new layer of meaning.';
@@ -205,8 +209,8 @@ export default function BlackoutPage() {
           <button className="nav-btn active">Blackout</button>
           <button className="nav-btn" onClick={() => navigate('/gallery')}>Gallery</button>
           <div>
-          <BlackoutEditor           />
-        </div>
+            <BlackoutEditor />
+          </div>
         </div>
 
         <div className="editor-area">
@@ -215,6 +219,7 @@ export default function BlackoutPage() {
             <button className="round-btn" onClick={() => setShowUploadPopup(true)}>
               Upload your own article
             </button>
+            <button className="round-btn" onClick={() => setShowUploadImagePopup(true)}>Upload your image</button>
           </div>
 
           {showUploadPopup && (
@@ -227,11 +232,50 @@ export default function BlackoutPage() {
             </div>
           )}
 
+          {showUploadImagePopup && (        //
+            <div className="upload-popup">
+              <div className="upload-popup-content">
+                <h3>Upload an image</h3>
+                <UploadImageOCR onConfirm={setTempImageText} />
+                {tempImageText && (
+                  <>
+                    <p
+                      style={{
+                        whiteSpace: 'pre-wrap',
+                        maxHeight: '150px',
+                        overflowY: 'auto',
+                        border: '1px solid #ccc',
+                        padding: '10px',
+                        fontFamily: 'monospace',
+                      }}
+                    >
+                      {tempImageText}
+                    </p>
+                    <button
+                      className="confirm-btn"
+                      onClick={() => {
+                        setRawText(tempImageText); // 把识别的文本填入主输入框
+                        setShowUploadImagePopup(false); 
+                        setTempImageText(''); 
+                      }}
+                    >
+                      Confirm
+                    </button>
+                  </>
+                )}
+
+                <button className="close-btn" onClick={() => setShowUploadImagePopup(false)}>
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+
           <TextInputPanel
-                  value={rawText}
-                  onChange={e => setRawText(e.target.value)}
-                  onSubmit={handleSubmitInputText}
-                  onGenerate={handleGenerate}
+            value={rawText}
+            onChange={e => setRawText(e.target.value)}
+            onSubmit={handleSubmitInputText}
+            onGenerate={handleGenerate}
           />
 
           <ColorPicker onColorChange={setSelectedColor} />
@@ -239,8 +283,8 @@ export default function BlackoutPage() {
         </div>
 
         <div className="preview-area">
-          <PreviewPanel 
-          onWordClick={handleWordClick}
+          <PreviewPanel
+            onWordClick={handleWordClick}
           />
           <CreationControls
             isBlackout={isBlackout}
