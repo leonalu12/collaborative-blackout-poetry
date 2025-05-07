@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import '../styles/BlackoutEditor.css';
-import socket from '../utils/socket'; // Adjust the path as necessary
+import { useBlackout } from '../context/BlackoutContext'; 
 
-function BlackoutEditor( { words,rawText,isBlackout, isGenerating,isInGame }) {
-  const [roomId, setRoomId] = useState('');
-  const [joinedRoom, setJoinedRoom] = useState(false);
+function BlackoutEditor( {  }) {
+  const {
+    socket,
+    roomId, setRoomId,
+    joinedRoom, setJoinedRoom,
+    words, rawText, isBlackout, isInGame,  
+  } = useBlackout();
+
   const [blackoutData, setBlackoutData] = useState([]);
   const [copySuccess, setCopySuccess] = useState('');
 
@@ -39,6 +44,7 @@ function BlackoutEditor( { words,rawText,isBlackout, isGenerating,isInGame }) {
     if (!roomId.trim()) return;
     socket.emit('join-document', roomId);
     setJoinedRoom(true);
+    console.log(`Joined room: ${roomId}`);
   };
 
   const handleBlackout = (newData) => {
@@ -64,7 +70,7 @@ function BlackoutEditor( { words,rawText,isBlackout, isGenerating,isInGame }) {
 
   const exitRoom = () => {
     socket.emit('leave-document', roomId); // optional for future cleanup
-    setRoomId('');
+    // setRoomId(''); //One player leave the room, the roomId is not cleared.
     setJoinedRoom(false);
     setBlackoutData([]);
   };

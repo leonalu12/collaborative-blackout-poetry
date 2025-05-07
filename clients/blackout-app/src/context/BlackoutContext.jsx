@@ -14,54 +14,37 @@ export const BlackoutProvider = ({ children }) => {
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
   const [words, setWords] = useState([]);
   const [roomId, setRoomId] = useState('');
+  const [joinedRoom, setJoinedRoom] = useState(false); // New state to track if the room is joined
 
-  // Socket操作封装
-  const updateText = (text) => {
-    setRawText(text);
-    setFormattedText(text);
+  const updateRoomState = (updatedFields) => {
+    const nextState = {
+      rawText,
+      words,
+      isBlackout,
+      isInGame,
+      ...updatedFields, // 局部更新
+    };
+    setRawText(nextState.rawText);
+    setWords(nextState.words);
+    setIsBlackout(nextState.isBlackout);
+    setIsInGame(nextState.isInGame);
+  
     if (roomId) {
-      socket.emit('update-text', { roomId, text });
+      socket.emit('update-room-state', { roomId, ...nextState });
     }
   };
-
-  const updateWords = (newWords) => {
-    setWords(newWords);
-    if (roomId) {
-      socket.emit('update-words', { roomId, words: newWords, isBlackout,isInGame });
-    }
-  };
-
-  const joinRoom = (roomId) => {
-    setRoomId(roomId);
-    socket.emit('join-poem-room', roomId);
-  };
-
-    // 初始化Socket监听
-    useEffect(() => {
-      const handleRoomState = (roomState) => {
-        setRawText(roomState.rawText);
-        setFormattedText(roomState.rawText);
-        setWords(roomState.words);
-        setIsInGame(roomState.isInGame);
-      };
-    socket.on('room-state', handleRoomState);
-    socket.on('text-updated', handleRoomState);
-    socket.on('words-updated', (data) => {
-      setWords(data.words);
-      if (data.isBlackout !== undefined) {
-        setIsBlackout(data.isBlackout);
-      }
+  
+  useEffect(() => {
+    socket.on('room-state', (roomState) => {
+      console.log('📥 Received room state:', roomState);
+      if (roomState.words) setWords(roomState.words);
+      if (roomState.rawText !== undefined) setRawText(roomState.rawText);
+      if (roomState.isBlackout !== undefined) setIsBlackout(roomState.isBlackout);
+      if (roomState.isInGame !== undefined) setIsInGame(roomState.isInGame);
     });
 
     return () => {
-      socket.off('room-state', handleRoomState);
-      socket.off('text-updated', handleRoomState);
-      socket.off('words-updated', (data) => {
-        setWords(data.words);
-        if (data.isBlackout !== undefined) {
-          setIsBlackout(data.isBlackout);
-        }
-      });
+      socket.off('room-state');
     };
   }, []);
   return (
@@ -87,9 +70,10 @@ export const BlackoutProvider = ({ children }) => {
         setWords,
         roomId,
         setRoomId,
-        updateText,
-        updateWords,
-        joinRoom,
+        joinedRoom, 
+        setJoinedRoom,
+        socket, // Socket Instance
+        updateRoomState
       }}
     >
       {children}

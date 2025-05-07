@@ -12,7 +12,6 @@ import SaveModal from './SaveModal/SaveModal';
 import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
 import EndGameButton from './EndGameButton';
-import { io } from "socket.io-client";
 import UploadImageOCR from './CreationArea/UploadImageOCR';
 
 export default function BlackoutPage() {
@@ -29,7 +28,6 @@ export default function BlackoutPage() {
     setSelectedColor,
     isBlackout,
     setIsBlackout,
-    isGenerating,
     setIsGenerating,
     isInGame,
     setIsInGame,
@@ -39,57 +37,9 @@ export default function BlackoutPage() {
     setShowSaveConfirmation,
     words,
     setWords,
-    roomId,
-    updateText,
-    updateWords,
+    updateRoomState
   } = useBlackout();
-
-  const fileInputRef = useRef();
-  const socket = useRef(null);
-
-  // 正确初始化 socket
-  useEffect(() => {
-    // 创建 socket 连接
-    socket.current = io('http://localhost:5050', {
-      withCredentials: true,
-    });
-    // 确保 socket 已连接
-    const onConnect = () => {
-      console.log('Socket connected');
-      setupSocketListeners();
-    };
-    // 确保只初始化一次
-    const handleRoomState = (roomState) => {
-      console.log('收到房间状态:', roomState);
-      setRawText(roomState.rawText);
-      setFormattedText(roomState.rawText);
-      setWords(roomState.words || initializeText(roomState.rawText));
-      setIsInGame(roomState.isInGame);
-    };
-
-
-
-    const setupSocketListeners = () => {
-      if (!socket.current) return;
-
-
-      socket.current.on('room-state', handleRoomState);
-      socket.current.on('text-updated', handleRoomState);
-
-      socket.current.on('words-updated', (words) => {
-        console.log('收到单词更新:', words);
-        setWords(words); // 直接使用服务器发来的words
-      });
-    }
-
-    return () => {
-      if (socket.current) {// 断开连接时清除事件监听器
-        socket.current.off('room-state', handleRoomState);
-        socket.current.off('connect', onConnect);
-        socket.current.disconnect();
-      };
-    };
-  }, [setRawText, setFormattedText, setWords, setIsInGame]);
+  const fileInputRef = useRef(null); // 用于文件上传的引用
 
   // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
   const initializeText = (text) => {
@@ -106,6 +56,7 @@ export default function BlackoutPage() {
   // This function is called when the component mounts or when the formattedText changes.
   useEffect(() => {
     setWords(initializeText(formattedText));
+    updateRoomState({ words: initializeText(formattedText) });
   }, [formattedText]);
 
   // This function is called when the user clicks on a word in the preview panel.
@@ -115,7 +66,7 @@ export default function BlackoutPage() {
       word.id === wordId ? { ...word, isSelected: !word.isSelected } : word)
     // Toggle the selected state of the clicked word
     setWords(newWords);
-    updateWords(newWords); // 会自动触发Socket更新
+    updateRoomState({ words: newWords }); // Update the room state with the new words
   };
 
   // This function is called when a word is clicked. It toggles the blackout state of the selected word.
@@ -133,11 +84,9 @@ export default function BlackoutPage() {
     });
     //rerender the component with the updated words
     setWords(updatedWords);
-    setIsBlackout(!isBlackout);// Toggle the blackout state
-    socket.current.emit('blackout', {
-      roomId,
-      words: updatedWords,
-    });
+    setIsBlackout(!isBlackout);// Toggle the blackout state    
+    
+    updateRoomState({ words: updatedWords, isBlackout: isBlackout }); // Update the room state with the new blackout state
   }
 
   const handleLoadExample = () => {
@@ -145,6 +94,8 @@ export default function BlackoutPage() {
     setRawText(newText);
     setFormattedText('');
     setIsBlackout(false);
+
+    updateRoomState({rawText: newText })
   };
 
 
@@ -153,17 +104,19 @@ export default function BlackoutPage() {
     setFormattedText('');
     setIsBlackout(false);
     setShowUploadPopup(false); // Close the popup after confirmation
+
+    updateRoomState({rawText: text })
   };
 
   const handleSubmitInputText = (text) => {
     if (!text) return;
     // Check if the text is empty or contains only whitespace
-    updateText(text); // 会自动触发Socket更新
     setRawText(text);
     setFormattedText(text);
     setIsBlackout(false);
     setIsInGame(true);// Set isInGame to true when text is submitted, cannot change texts.
 
+    updateRoomState({rawText: text, isInGame: true, isBlackout: false })
   }
 
   const handleGenerate = async () => {
@@ -181,11 +134,7 @@ export default function BlackoutPage() {
       setRawText(text);
       setFormattedText("");
       setIsBlackout(false);
-
-      socket.current.emit('update-text', {
-        roomId,
-        text: text,
-      });
+      updateRoomState({rawText: text })
     } catch (err) {
       console.error("Generation failed:", err);
       // TODO: show a UI toast or inline error message

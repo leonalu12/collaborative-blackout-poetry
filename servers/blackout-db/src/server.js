@@ -38,13 +38,13 @@ app.use('/api/comments', require('../routes/commentRoutes'));
 app.use('/api/community', require('../routes/communityRoutes'));
 app.use('/api/generate', require('../routes/generateRoutes'));
 
-
+  const poemRooms = {};
 // 🧠 Socket.IO logic
 io.on('connection', (socket) => {
   console.log('🟢 Socket connected:', socket.id);
    // save the poem rooms in memory
   // All rooms are stored in the poemRooms object
-  const poemRooms = {};
+
   // Initialize a new room when a user joins
   socket.on('join-document', (roomId) => {
     socket.join(`document:${roomId}`);
@@ -64,35 +64,32 @@ io.on('connection', (socket) => {
         // 发送完整房间状态给新用户
         socket.emit('room-state', poemRooms[roomId]);
     // 通知其他用户（排除自己）
-    socket.to(`poem:${roomId}`).emit('player-joined', {
+    socket.to(`document:${roomId}`).emit('player-joined', {
       playerId: socket.id,
       players: poemRooms[roomId].players
     });
     console.log(`用户 ${socket.id} 加入房间 ${roomId}，当前玩家:`, poemRooms[roomId].players);
       })
 
-      socket.on('update-text', ({ roomId, text }) => {
-        // update the text in the poemRooms object
-        poemRooms[roomId].rawText = text;
-        poemRooms[roomId].words = initializeText(text);
-        // Broadcast the updated text to all clients in the room
-        io.to(`poem:${roomId}`).emit('text-updated', {
-          rawText: text,
-          words: poemRooms[roomId].words
-        });
 
-        socket.on('update-words', ({ roomId, words,isBlackout,isInGame }) => {
-          poemRooms[roomId].words = words;
-          poemRooms[roomId].isBlackout = isBlackout;
-          poemRooms[roomId].isInGame = isInGame;
-          console.log(`收到房间 ${roomId} 的单词更新:`, words);
-          socket.to(`poem:${roomId}`).emit('words-updated', {
-            words: poemRooms[roomId].words,
-            isBlackout: poemRooms[roomId].isBlackout,
-            isInGame: poemRooms[roomId].isInGame
-          });
-        });
+      socket.on('update-room-state', ({ roomId, rawText, words, isBlackout, isInGame }) => {
+        if (!poemRooms[roomId]) return;
+      
+        // 更新对应房间状态
+        poemRooms[roomId] = {
+          ...poemRooms[roomId],
+          rawText,
+          words,
+          isBlackout,
+          isInGame,
+        };
+      
+        // 通知房间内所有人（包含发送者或不包含，按需）
+        io.to(`document:${roomId}`).emit('room-state', poemRooms[roomId]);
       });
+
+
+
 //blackout change happens in the BlackoutPage.jsx component.So this may not be needed here.
   socket.on('blackout-change', ({ roomId, blackoutData }) => {
     socket.to(`document:${roomId}`).emit('receive-blackout', blackoutData);
