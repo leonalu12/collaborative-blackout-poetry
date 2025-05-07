@@ -17,8 +17,8 @@ async function seed() {
     Comment.deleteMany({}),
   ]);
 
-  // Create 3 users: Alice, Bob, and Charlie
-  const [alice, bob, charlie] = await User.create([
+  // Create 4 users: Alice, Bob, Charlie, and Test
+  const [alice, bob, charlie, testUser] = await User.create([
     {
       name: 'Alice',
       password: 'hashedpassword123',
@@ -34,112 +34,109 @@ async function seed() {
       password: 'hashedpassword789',
       email: 'charlie@example.com',
     },
+    {
+      name: 'Test',
+      password: '78907890',
+      email: 'test@example.com',
+    },
   ]);
 
   // Create a private blackout document with Alice as the only collaborator
   const blackout1 = await BlackoutDocument.create({
     documentName: 'Blackout Document 1',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    blackoutContent: 'Lorem consectetur elit ut labore Ut',
+    blackoutWords: [],
     collaborators: [alice._id],
-    state: 'private', // This document is private
+    state: 'private',
   });
 
   // Create a community interaction for blackout1
   const interaction1 = await CommunityInteraction.create({
     documentId: blackout1._id,
     Likes: 10,
-    comments: [], // Will be filled later
+    comments: [],
   });
 
-  // Add a comment from Alice to interaction1
+  // Add a comment from Bob to interaction1
   const comment1 = await Comment.create({
     userId: bob._id,
     communityInteractionId: interaction1._id,
     comment: 'Interesting document!',
   });
-
-  // Push the comment into the interaction and save
   interaction1.comments.push(comment1._id);
   await interaction1.save();
 
-  // Create a public blackout document (no restrictions)
+  // Create public blackout documents
   const blackout2 = await BlackoutDocument.create({
     documentName: 'Public Document',
     content: 'Pulvinar vivamus fringilla lacus nec metus bibendum egestas...',
-    blackoutContent: '',
-    collaborators: [alice._id], // Even though it's public, Alice is listed as a collaborator
-    state: 'public', // Public document
+    blackoutWords: [],
+    collaborators: [alice._id],
+    state: 'public',
   });
+
   const blackout4 = await BlackoutDocument.create({
     documentName: 'Public Poem A',
     content: 'The rain falls gently on the leaves...',
-    blackoutContent: '',
+    blackoutWords: [],
     collaborators: [bob._id],
     state: 'public',
   });
-  
+
   const blackout5 = await BlackoutDocument.create({
     documentName: 'Public Poem B',
     content: 'Night whispers secrets to the stars...',
-    blackoutContent: '',
+    blackoutWords: [],
     collaborators: [charlie._id],
     state: 'public',
   });
-  
+
   const blackout6 = await BlackoutDocument.create({
     documentName: 'Public Poem C',
     content: 'Beneath the moon, the waves still sing...',
-    blackoutContent: '',
+    blackoutWords: [],
     collaborators: [],
     state: 'public',
   });
 
-  // Create a community interaction for blackout2
+  // Community interaction for blackout2
   const interaction2 = await CommunityInteraction.create({
     documentId: blackout2._id,
     Likes: 13,
     comments: [],
   });
 
-  // Add a comment from Bob to interaction2
+  // Add comments to interaction2
   const comment2 = await Comment.create({
     userId: bob._id,
     communityInteractionId: interaction2._id,
     comment: 'Great insights on this document!',
   });
-
   interaction2.comments.push(comment2._id);
 
-  // Add a comment from Charlie to interaction2
   const comment3 = await Comment.create({
     userId: charlie._id,
     communityInteractionId: interaction2._id,
     comment: 'I found this document very helpful.',
   });
-
   interaction2.comments.push(comment3._id);
-
-  // Save interaction2 with both comments
   await interaction2.save();
 
-  // Create a private document shared between Alice, Bob, and Charlie
+  // Shared private document between Alice, Bob, and Charlie
   const blackout3 = await BlackoutDocument.create({
     documentName: 'Shared Document',
     content: 'Pulvinar vivamus fringilla lacus nec metus bibendum egestas...',
-    blackoutContent: 'Pulvinar vivamus fringilla lacus nec metus bibendum egestas...',
-    collaborators: [alice.id, bob._id, charlie._id], // Note: alice.id should be alice._id for consistency
+    blackoutWords: [],
+    collaborators: [alice._id, bob._id, charlie._id],
     state: 'private',
   });
 
-  // Create a community interaction for blackout3 (no comments yet)
   const interaction3 = await CommunityInteraction.create({
     documentId: blackout3._id,
     Likes: 13,
     comments: [],
   });
 
-  // Log success and exit the process
   console.log('✅ Database seeded with users and documents!');
   process.exit();
 }
