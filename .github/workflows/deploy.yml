@@ -41,6 +41,9 @@ jobs:
         env:
           MONGO_URI: mongodb://localhost:27017/test-db
           NODE_ENV: test
+          PORT: 5000
+          BLACKOUT_APP_URL: http://localhost:5173
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
   build:
     name: Build & Push Docker Images
