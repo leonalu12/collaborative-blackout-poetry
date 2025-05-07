@@ -4,6 +4,7 @@ import '../GalleryPage.css';
 import '../PoemModal.css';
 
 export default function GalleryPage() {
+  const API_BASE = import.meta.env.VITE_API_BASE;
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user?.id;
   const [documents, setDocuments] = useState([]);
@@ -12,7 +13,7 @@ export default function GalleryPage() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const itemsPerPage = 6;
   useEffect(() => {
-    fetch('http://localhost:5050/api/documents')
+    fetch(`${API_BASE}api/documents`)
       .then(res => res.json())
       .then(data => {
         console.log('后端返回的数据:', data);  //test

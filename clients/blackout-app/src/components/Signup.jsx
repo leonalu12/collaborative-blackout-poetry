@@ -5,6 +5,7 @@ import '../styles/Signup.css';
 import { signup } from '../utils/api';
 
 const Signup = () => {
+  const API_BASE = import.meta.env.VITE_API_BASE;
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -30,7 +31,7 @@ const Signup = () => {
     }
   
     try {
-      const res = await fetch('http://localhost:5050/api/auth/signup', {
+      const res = await fetch(`${API_BASE}api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),

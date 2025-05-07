@@ -1,7 +1,8 @@
-const API_BASE = 'http://localhost:5050/api/auth';
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export const signup = async (userData) => {
-  const res = await fetch(`${API_BASE}/signup`, {
+  const res = await fetch(`${API_BASE}api/auth/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
@@ -10,7 +11,7 @@ export const signup = async (userData) => {
 };
 
 export const login = async (userData) => {
-  const res = await fetch(`${API_BASE}/login`, {
+  const res = await fetch(`${API_BASE}api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),

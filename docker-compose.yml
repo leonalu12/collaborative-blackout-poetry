@@ -19,6 +19,8 @@ services:
     image: blackout-app:0.0
     ports:
       - 5173:5173
+    env_file:
+      - ./clients/blackout-app/.env
     depends_on:
       blackout-db:
         condition: service_started

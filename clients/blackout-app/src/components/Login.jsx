@@ -5,6 +5,7 @@ import '../styles/Login.css';
 import { login } from '../utils/api';
 
 const Login = () => {
+  const API_BASE = import.meta.env.VITE_API_BASE;
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +20,7 @@ const Login = () => {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:5050/api/auth/login', {
+      const res = await fetch(`${API_BASE}api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

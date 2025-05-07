@@ -78,7 +78,7 @@ npm install
 ### 🐳 Run Entire Stack with Docker Compose
 
 ```bash
-docker compose up --build --no-cache
+docker compose up --build 
 ```
 
 #### Populate the database with sample data use
@@ -132,12 +132,19 @@ The full stack is orchestrated using Docker Compose.
 
 ## 📁 .env Configuration for blackout-db
 
-The `blackout-db` server uses a `.env` file to manage environment variables. This file should be placed inside the `servers/blackout-db/` directory and contain:
+The app client and server uses a `.env` files please include these:
 
+### `servers/blackout-db/.env`
 ```env
+NODE_ENV=production
+MONGO_URI=mongodb://mongo:27017/blackoutdb
 PORT=5000
-MONGO_URI=mongodb://mongo:27017/blackout-db
-OPENAI_API_KEY= (key provided on submition)
+BLACKOUT_APP_URL=http://localhost:5173
+```
+
+### `clients/blackout-app/.env`
+```env
+VITE_API_BASE=http://localhost:5050/
 ```
 
 > 🔒 This file is excluded from version control via `.gitignore` and `.dockerignore`.
