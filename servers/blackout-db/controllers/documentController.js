@@ -30,10 +30,10 @@ const createDocument = async (req, res) => {
 
     const newDoc = new BlackoutDocument({
       documentName,
-      blackoutWords: blackoutWords.map(word => ({
+      blackoutWords: (blackoutWords || []).map(word => ({
         index: word.index,
         text: word.text
-      })), 
+      })) , 
       state: state || "private",
     });
 
