@@ -15,6 +15,7 @@ import EndGameButton from './EndGameButton';
 import UploadImageOCR from './CreationArea/UploadImageOCR';
 
 export default function BlackoutPage() {
+  const API_BASE = import.meta.env.VITE_API_BASE;
   const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
   const [tempImageText, setTempImageText] = useState('');
   const [title, setTitle] = useState("");
@@ -123,7 +124,7 @@ export default function BlackoutPage() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
-      const resp = await fetch("http://localhost:5050/api/generate", {
+      const resp = await fetch(`${API_BASE}api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
