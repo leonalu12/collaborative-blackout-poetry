@@ -70,6 +70,7 @@
 .doc-card {
   background-color: #fff;
   border-radius: 10px;
+  color: black !important;
   padding: 1em;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   display: flex;
@@ -84,6 +85,7 @@
 .doc-card h3 {
   margin: 0;
   font-size: 1rem;
+  color: black !important;
 }
 
 .doc-card p {
@@ -91,6 +93,7 @@
   font-size: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: black !important;
 }
 
 .doc-type {

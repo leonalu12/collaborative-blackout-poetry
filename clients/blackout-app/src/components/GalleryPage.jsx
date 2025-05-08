@@ -4,6 +4,7 @@ import '../GalleryPage.css';
 import '../PoemModal.css';
 
 export default function GalleryPage() {
+
   const API_BASE = import.meta.env.VITE_API_BASE;
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user?.id;
