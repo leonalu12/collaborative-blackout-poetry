@@ -15,9 +15,9 @@ import EndGameButton from './EndGameButton';
 import UploadImageOCR from './CreationArea/UploadImageOCR';
 
 export default function BlackoutPage() {
-  const API_BASE = import.meta.env.VITE_API_BASE;
   const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
   const [tempImageText, setTempImageText] = useState('');
+  const [title, setTitle] = useState("");
 
   const navigate = useNavigate();
   const {
@@ -85,10 +85,9 @@ export default function BlackoutPage() {
     });
     //rerender the component with the updated words
     setWords(updatedWords);
-    const newBlackoutState = !isBlackout; // Toggle the blackout state
-    setIsBlackout(newBlackoutState);// Toggle the blackout state    
+    setIsBlackout(!isBlackout);// Toggle the blackout state    
     
-    updateRoomState({ words: updatedWords, isBlackout: newBlackoutState }); // Update the room state with the new blackout state
+    updateRoomState({ words: updatedWords, isBlackout: isBlackout }); // Update the room state with the new blackout state
   }
 
   const handleLoadExample = () => {
@@ -124,7 +123,7 @@ export default function BlackoutPage() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
-      const resp = await fetch(`${API_BASE}api/generate`, {
+      const resp = await fetch("http://localhost:5050/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -222,6 +221,13 @@ export default function BlackoutPage() {
             </div>
           )}
 
+          <input
+            type="text"
+            placeholder="Enter Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+
           <TextInputPanel
             value={rawText}
             onChange={e => setRawText(e.target.value)}
@@ -251,6 +257,8 @@ export default function BlackoutPage() {
         <SaveModal
           isOpen={showSaveConfirmation}
           onClose={() => setShowSaveConfirmation(false)}
+          title={title}  // ✅ 传递标题
+          words={words}  // ✅ 传递 blackout 处理的文本
         />
       </div>
     </div>

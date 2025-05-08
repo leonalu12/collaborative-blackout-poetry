@@ -2,13 +2,46 @@ import React from 'react';
 import './SaveModal.css';
 import html2canvas from 'html2canvas';
 
-const SaveModal = ({ isOpen, onClose }) => {
+const SaveModal = ({ isOpen, onClose, title, words }) => {
   if (!isOpen) return null;
 
-  const handleSaveToGallery = () => {
-    console.log('Save to Gallery clicked');
-    onClose();
+  const handleSaveToGallery = async () => {
+    if (!title?.trim()) {  // ✅ 确保 `title` 定义正确
+      alert("Please enter a title before saving!");
+      return;
+    }
+  
+    if (!words || words.length === 0) {  // ✅ 确保 `words` 存在
+      alert("No blackout words selected!");
+      return;
+    }
+  
+    // 提取 blackout 的文本
+    const blackoutWordsArray = words
+      .filter(word => word.isBlackout)
+      .map(word => ({ index: word.id, text: word.text }));
+  
+    try {
+      const response = await fetch("http://localhost:5050/api/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentName: title, 
+          blackoutWords: blackoutWordsArray, 
+          state: "public",
+        }),
+      });
+  
+      if (!response.ok) throw new Error("Failed to save");
+  
+      alert("Saved to gallery successfully!");
+      onClose();
+    } catch (error) {
+      console.error("Save error:", error);
+      alert("Error saving document.");
+    }
   };
+    
 
   const handleSaveAsJPG = async() => {
     try{
