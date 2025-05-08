@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+
 
 ARG NODE_VERSION=20.0.0
 FROM node:${NODE_VERSION}-alpine AS base

@@ -15,6 +15,7 @@ import EndGameButton from './EndGameButton';
 import UploadImageOCR from './CreationArea/UploadImageOCR';
 
 export default function BlackoutPage() {
+  const API_BASE = import.meta.env.VITE_API_BASE;
   const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
   const [tempImageText, setTempImageText] = useState('');
   const [title, setTitle] = useState("");
@@ -38,7 +39,8 @@ export default function BlackoutPage() {
     setShowSaveConfirmation,
     words,
     setWords,
-    updateRoomState
+    updateRoomState,
+    roomId
   } = useBlackout();
   const fileInputRef = useRef(null); // 用于文件上传的引用
 
@@ -90,17 +92,31 @@ export default function BlackoutPage() {
     updateRoomState({ words: updatedWords, isBlackout: isBlackout }); // Update the room state with the new blackout state
   }
 
-  const handleLoadExample = () => {
-    const newText = 'Every word you blackout reveals a new layer of meaning.';
-    setRawText(newText);
-    setFormattedText('');
-    setIsBlackout(false);
-
-    updateRoomState({rawText: newText })
+  const handleLoadRandomPoem = async () => {
+    if (isInGame) return; // 🚫 禁止修改 rawText
+    try {
+      const res = await fetch(`${API_BASE}api/documents/random`);
+      if (!res.ok) throw new Error('Failed to fetch random document');
+      const data = await res.json();
+  
+      setRawText(data.content);
+      setIsBlackout(false);
+  
+      updateRoomState({
+        rawText: data.content,
+        isBlackout: false
+      });
+    } catch (err) {
+      console.error(err);
+      alert('Failed to load random poem.');
+    }
   };
+  
+  
 
 
   const handleUploadText = (text) => {
+    if (isInGame) return; // 🚫 已锁定，不允许上传替换 rawText
     setRawText(text);
     setFormattedText('');
     setIsBlackout(false);
@@ -165,11 +181,11 @@ export default function BlackoutPage() {
 
         <div className="editor-area">
           <div className="top-buttons">
-            <button className="round-btn" onClick={handleLoadExample}>Get Random Poem</button>
-            <button className="round-btn" onClick={() => setShowUploadPopup(true)}>
+            <button className="round-btn" onClick={handleLoadRandomPoem} disabled={isInGame || isBlackout}>Get Random Poem</button>
+            <button className="round-btn" onClick={() => setShowUploadPopup(true)} disabled={isInGame || isBlackout}>
               Upload your own article
             </button>
-            <button className="round-btn" onClick={() => setShowUploadImagePopup(true)}>Upload your image</button>
+            <button className="round-btn" onClick={() => setShowUploadImagePopup(true)} disabled={isInGame || isBlackout}>Upload your image</button>
           </div>
 
           {showUploadPopup && (
@@ -230,7 +246,9 @@ export default function BlackoutPage() {
 
           <TextInputPanel
             value={rawText}
-            onChange={e => setRawText(e.target.value)}
+            onChange={e => {
+              if (isInGame || isBlackout) return;
+              setRawText(e.target.value)}}
             onSubmit={handleSubmitInputText}
             onGenerate={handleGenerate}
           />
