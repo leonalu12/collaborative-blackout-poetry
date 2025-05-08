@@ -33,7 +33,10 @@ const createDocument = async (req, res) => {
       blackoutWords: (blackoutWords || []).map(word => ({
         index: word.index,
         text: word.text
-      })) , 
+
+      })), 
+
+
       state: state || "private",
     });
 

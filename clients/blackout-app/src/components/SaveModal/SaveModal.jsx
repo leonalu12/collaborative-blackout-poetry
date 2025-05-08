@@ -3,7 +3,7 @@ import './SaveModal.css';
 import html2canvas from 'html2canvas';
 
 const SaveModal = ({ isOpen, onClose, title, words }) => {
-  const API_BASE = import.meta.env.VITE_API_BASE;
+
   if (!isOpen) return null;
 
   const handleSaveToGallery = async () => {
@@ -23,7 +23,9 @@ const SaveModal = ({ isOpen, onClose, title, words }) => {
       .map(word => ({ index: word.id, text: word.text }));
   
     try {
-      const response = await fetch(`${API_BASE}api/documents`, {
+      const response = await fetch("http://localhost:5050/api/documents", {
+=======
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
