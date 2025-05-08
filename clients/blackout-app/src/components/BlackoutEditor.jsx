@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react';
+import { useState } from 'react';
 import '../styles/BlackoutEditor.css';
 import { useBlackout } from '../context/BlackoutContext'; 
 
@@ -7,39 +7,14 @@ function BlackoutEditor( {  }) {
     socket,
     roomId, setRoomId,
     joinedRoom, setJoinedRoom,
-    words, rawText, isBlackout, isInGame,  
+    // words, rawText, isBlackout, isInGame,  
+    setWords, setRawText, setIsBlackout, setIsInGame
   } = useBlackout();
 
-  const [blackoutData, setBlackoutData] = useState([]);
+
   const [copySuccess, setCopySuccess] = useState('');
 
-  useEffect(() => {
-    if (!joinedRoom) return;
 
-    socket.on('receive-blackout', (data) => {
-      console.log('Received blackout:', data);
-      setBlackoutData(prev => [...prev, data]);
-    });
-
-    return () => {
-      socket.off('receive-blackout');
-    };
-  }, [joinedRoom]);
-
-  useEffect(() => {
-    if (!joinedRoom ) return;
-  
-    socket.emit('blackout-change', {
-      documentId: roomId,
-      words,
-      rawText,
-      isBlackout,
-      isInGame
-    });
-  }, [words, rawText, isBlackout, isInGame]);
-
-
-  
   const joinRoom = () => {
     if (!roomId.trim()) return;
     socket.emit('join-document', roomId);
@@ -47,11 +22,6 @@ function BlackoutEditor( {  }) {
     console.log(`Joined room: ${roomId}`);
   };
 
-  const handleBlackout = (newData) => {
-    if (!joinedRoom) return;
-    socket.emit('blackout-change', { documentId: roomId, blackoutData: newData });
-    setBlackoutData(prev => [...prev, newData]);
-  };
 
   const createRoom = () => {
     const newRoomId = crypto.randomUUID();
@@ -70,9 +40,12 @@ function BlackoutEditor( {  }) {
 
   const exitRoom = () => {
     socket.emit('leave-document', roomId); // optional for future cleanup
-    // setRoomId(''); //One player leave the room, the roomId is not cleared.
+    setRoomId(''); 
     setJoinedRoom(false);
-    setBlackoutData([]);
+    setWords([]);
+    setRawText('Left the room!');
+    setIsBlackout(false);
+    setIsInGame(false);
   };
 
   return (
@@ -99,9 +72,7 @@ function BlackoutEditor( {  }) {
             </button>
             {copySuccess && <span style={{ color: 'green', fontSize: '0.85rem' }}>{copySuccess}</span>}
           </div>
-          <button onClick={() => handleBlackout(`Blackout at ${new Date().toLocaleTimeString()}`)}>
-            Test Blackout
-          </button>
+
           <button onClick={exitRoom} className="exit-button">
             Exit Room
           </button>

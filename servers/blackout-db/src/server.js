@@ -89,18 +89,15 @@ io.on('connection', (socket) => {
       });
 
 
-
-//blackout change happens in the BlackoutPage.jsx component.So this may not be needed here.
-  socket.on('blackout-change', ({ roomId, blackoutData }) => {
-    socket.to(`document:${roomId}`).emit('receive-blackout', blackoutData);
-  });
-
   socket.on('disconnect', () => {
     console.log('🔴 Socket disconnected:', socket.id);
   });
 
   socket.on('leave-document', (roomId) => {
     socket.leave(`document:${roomId}`);
+    if (poemRooms[roomId]) {
+      poemRooms[roomId].players = poemRooms[roomId].players.filter(id => id !== socket.id);
+    }
     console.log(`User ${socket.id} left document:${roomId}`);
   });
 });
