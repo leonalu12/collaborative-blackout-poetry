@@ -4,9 +4,10 @@ import { useBlackout } from '../context/BlackoutContext';
 import '../styles/Chatbox.css';
 
 function Chatbox() {
-  const { socket, roomId, username } = useBlackout();
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState('');
+    const { socket, roomId, user } = useBlackout();
+    const username = user?.name || 'Anonymous';
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState('');
 
   // 监听收到的消息
   useEffect(() => {
