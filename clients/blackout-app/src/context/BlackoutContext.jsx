@@ -15,6 +15,7 @@ export const BlackoutProvider = ({ children }) => {
   const [words, setWords] = useState([]);
   const [roomId, setRoomId] = useState('');
   const [joinedRoom, setJoinedRoom] = useState(false); // New state to track if the room is joined
+  const [user, setUser] = useState(null);
 
   const updateRoomState = (updatedFields) => {
     const nextState = {
@@ -47,6 +48,19 @@ export const BlackoutProvider = ({ children }) => {
       socket.off('room-state');
     };
   }, []);
+
+  // 🔹 在初始加载时自动从 localStorage 中恢复用户信息
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error('Invalid user data in localStorage');
+      }
+    }
+  }, []);
+
   return (
     <BlackoutContext.Provider
       value={{
@@ -73,7 +87,9 @@ export const BlackoutProvider = ({ children }) => {
         joinedRoom, 
         setJoinedRoom,
         socket, // Socket Instance
-        updateRoomState
+        updateRoomState,
+        user,
+        setUser
       }}
     >
       {children}

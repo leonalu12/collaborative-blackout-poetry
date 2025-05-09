@@ -71,6 +71,20 @@ io.on('connection', (socket) => {
     console.log(`用户 ${socket.id} 加入房间 ${roomId}，当前玩家:`, poemRooms[roomId].players);
       })
 
+      // 监听用户发送的聊天消息
+    socket.on('send-message', (messageData) => {
+      const { roomId, username, message, timestamp } = messageData;
+
+      // 广播消息到指定房间
+      io.to(`document:${roomId}`).emit('receive-message', {
+        username,
+        message,
+        timestamp
+      });
+
+      console.log(`Message sent to room ${roomId}:`, messageData);
+    });
+
 
       socket.on('update-room-state', ({ roomId, rawText, words, isBlackout, isInGame }) => {
         if (!poemRooms[roomId]) return;

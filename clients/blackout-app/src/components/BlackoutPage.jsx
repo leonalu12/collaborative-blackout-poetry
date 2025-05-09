@@ -13,6 +13,7 @@ import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
 import EndGameButton from './EndGameButton';
 import UploadImageOCR from './CreationArea/UploadImageOCR';
+import Chatbox from './Chatbox';
 
 export default function BlackoutPage() {
   const API_BASE = import.meta.env.VITE_API_BASE;
@@ -278,6 +279,11 @@ export default function BlackoutPage() {
           title={title}  // ✅ 传递标题
           words={words}  // ✅ 传递 blackout 处理的文本
         />
+
+        <div className="chatbox-section">
+          {/* 只有加入房间后才显示聊天框 */}
+          {roomId && <Chatbox />}
+        </div>
       </div>
     </div>
   );
