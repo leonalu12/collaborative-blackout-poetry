@@ -88,9 +88,10 @@ export default function BlackoutPage() {
     });
     //rerender the component with the updated words
     setWords(updatedWords);
-    setIsBlackout(!isBlackout);// Toggle the blackout state    
+    const newBlackoutState = !isBlackout
+    setIsBlackout(newBlackoutState);// Toggle the blackout state    
     
-    updateRoomState({ words: updatedWords, isBlackout: isBlackout }); // Update the room state with the new blackout state
+    updateRoomState({ words: updatedWords, isBlackout: newBlackoutState }); // Update the room state with the new blackout state
   }
 
   const handleLoadRandomPoem = async () => {
