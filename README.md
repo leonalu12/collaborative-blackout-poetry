@@ -92,7 +92,7 @@ Access your services:
 | Service        | URL                             |
 |----------------|---------------------------------|
 | Blackout App   | http://localhost:5173           |
-| Blackout DB    | http://localhost:5000           |
+| Blackout DB    | http://localhost:5050           |
 | MongoDB        | mongodb://localhost:27017       |
 
 #### When done and want to quit use:
@@ -137,14 +137,16 @@ The app client and server uses a `.env` files please include these:
 ### `servers/blackout-db/.env`
 ```env
 NODE_ENV=production
-MONGO_URI=mongodb://mongo:27017/blackoutdb
-PORT=5000
-BLACKOUT_APP_URL=http://localhost:5173
+MONGO_URI=(Access Submitted apart)
+PORT=5050
+BLACKOUT_APP_URL=https://blackout-app.fly.dev/
+OPENAI_API_KEY=(Key summited apart)
+ALLOWED_ORIGINS=https://blackout-app.fly.dev,http://localhost:5173
 ```
 
 ### `clients/blackout-app/.env`
 ```env
-VITE_API_BASE=http://localhost:5050/
+VITE_API_BASE=https://blackout-db.fly.dev/
 ```
 
 > 🔒 This file is excluded from version control via `.gitignore` and `.dockerignore`.

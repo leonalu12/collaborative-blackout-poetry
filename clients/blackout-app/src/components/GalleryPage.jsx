@@ -117,60 +117,6 @@ export default function GalleryPage() {
     filter === 'all' ? true : d.state === filter
   );
 
-  const handleLike = async (docId) => {
-    try {
-      const res = await axios.put(`${API_BASE}api/interactions/${docId}/like`, { userId });
-      const updatedDoc = res.data;
-      setLikeCount(updatedDoc.likes.length);
-      setLiked(updatedDoc.likes.includes(userId));
-      setSelectedDoc(updatedDoc);
-    } catch (err) {
-      console.error('Error liking:', err);
-    }
-  };
-
-  const handleComment = async (docId) => {
-    if (!commentText.trim()) return;
-    try {
-      const res = await axios.post(`${API_BASE}api/interactions/${docId}/comments`, {
-        userId,
-        comment: commentText
-      });
-      setCommentText('');
-      setComments(prev => [res.data, ...prev]);
-    } catch (err) {
-      console.error('Error commenting:', err);
-    }
-  };
-
-  const handlePublishToggle = async (docId, currentState) => {
-    try {
-      const newState = currentState === 'private' ? 'public' : 'private';
-      const res = await axios.put(`${API_BASE}api/documents/${docId}/publish`, { state: newState });
-      if (filter === 'private' && res.data.state === 'public') {
-        setDocuments(prev => prev.filter(doc => doc._id !== docId));
-      }
-    } catch (err) {
-      console.error('Error toggling publish state:', err);
-    }
-  };
-
-  const handleEdit = async (doc) => {
-    try {
-      const res = await axios.get(`${API_BASE}api/documents/${doc._id}`);
-      const data = res.data;
-      localStorage.setItem('editPoemData', JSON.stringify({
-        documentId: data._id,
-        originalText: data.originalText || data.content,
-        redactedText: data.redactedText || '',
-        title: data.documentName
-      }));
-      navigate('/blackout');
-    } catch (err) {
-      console.error('Error fetching document for editing:', err);
-    }
-  };
-
   const totalPages = Math.ceil(documents.length / itemsPerPage);
   const currentDocs = documents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 

@@ -8,24 +8,26 @@ const connectDB = require('../config/blackout-db');
 
 const app = express();
 const server = http.createServer(app);
+const PORT = process.env.PORT || 5050;
 
-const io = new Server(server, {
-  cors: {
-    origin: process.env.BLACKOUT_APP_URL,
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
-});
+// at the top, after you load dotenv…
+const raw = process.env.ALLOWED_ORIGINS || '';
+const allowedOrigins = raw.split(',').map(u => u.trim()).filter(Boolean);
 
-
-const PORT = process.env.PORT || 5000;
-
-// 👇 CORS for Express
-app.use(cors({
-  origin: process.env.BLACKOUT_APP_URL,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+// then reuse for both Express and Socket.IO
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`Origin ${origin} not allowed by CORS`));
+  },
+  methods: ['GET','POST','PUT','DELETE'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+const io = new Server(server, { cors: corsOptions });
+
 app.use(express.json());
 
 // Routes

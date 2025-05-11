@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 beforeAll(async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://mongo:27017/test-db';
+  const uri = process.env.MONGO_URI;
   await mongoose.connect(uri, {
     dbName: 'test-db',
   });
