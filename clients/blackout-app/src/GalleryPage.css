@@ -1,5 +1,3 @@
-/* GalleryPage.css */
-
 .gallery-page {
   display: flex;
   height: 100vh;
@@ -7,7 +5,7 @@
   background-color: #c9f0ff;
 }
 
-/* 左侧按钮栏 */
+/* Left sidebar */
 .sidebar {
   width: 120px;
   background-color: #c9f0ff;
@@ -31,7 +29,7 @@
   color: black;
 }
 
-/* 右侧内容区 */
+/* Right content area */
 .content-area {
   flex: 1;
   padding: 2em;
@@ -43,30 +41,27 @@
   margin: 0;
 }
 
-/* 白色卡片容器 */
+/* White content box */
 .gallery-content-box {
-  position: relative;            /* 定位上下文 */
+  position: relative;
   background-color: white;
   padding: 2em 2em 3.5em 2em;
   border-radius: 15px;
   margin-top: 1em;
-  /* 固定尺寸 */
   width: 700px;
   height: 400px;
-  /* 小阴影 */
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* 卡片网格：3 列 × 2 行 */
+/* Grid layout */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(3, 180px); 
   grid-template-rows: repeat(2, 180px);     
   gap: 1em;
-  justify-content: center; /* 水平居中整个卡片区域 */
+  justify-content: center;
 }
 
-/* 单张卡片 */
 .doc-card {
   background-color: #fff;
   border-radius: 10px;
@@ -77,9 +72,7 @@
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-
   aspect-ratio: 1 / 1;
-
 }
 
 .doc-card h3 {
@@ -102,11 +95,11 @@
   text-align: right;
 }
 
-/* 分页按钮栏 */
+/* Pagination */
 .pagination {
-  position: absolute;       /* 脱离文档流 */
-  bottom: 1em;              /* 距离白框底部 1em */
-  left: 50%;                /* 水平居中 */
+  position: absolute;
+  bottom: 1em;
+  left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 0.5em;
@@ -115,7 +108,6 @@
   padding: 0;
 }
 
-/* 分页按钮 */
 .pagination li {
   width: 28px;
   height: 28px;
@@ -134,7 +126,8 @@
   color: white;
 }
 
-.delete-btn {     /*delete card删除卡片*/
+/* Delete (X) button */
+.delete-btn {
   position: absolute;
   top: 6px;
   right: 10px;
