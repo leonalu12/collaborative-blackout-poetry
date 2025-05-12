@@ -17,7 +17,7 @@ function App() {
 
         {/* Protected route */}
         <Route
-          path="/*"
+          path="/:id?"
           element={
             <ProtectedRoute>
               <BlackoutPage />

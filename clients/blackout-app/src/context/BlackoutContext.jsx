@@ -5,6 +5,7 @@ const BlackoutContext = createContext();
 
 export const BlackoutProvider = ({ children }) => {
   const [rawText, setRawText] = useState('This is a sample text for blackout. You can edit or replace it.');
+  const [blackoutWords, setBlackoutWords] = useState([]);
   const [formattedText, setFormattedText] = useState('');
   const [selectedColor, setSelectedColor] = useState('black');
   const [isBlackout, setIsBlackout] = useState(false);
@@ -20,12 +21,14 @@ export const BlackoutProvider = ({ children }) => {
   const updateRoomState = (updatedFields) => {
     const nextState = {
       rawText,
+      blackoutWords,
       words,
       isBlackout,
       isInGame,
       ...updatedFields, // 局部更新
     };
     setRawText(nextState.rawText);
+    setBlackoutWords(nextState.blackoutWords);
     setWords(nextState.words);
     setIsBlackout(nextState.isBlackout);
     setIsInGame(nextState.isInGame);
@@ -40,6 +43,7 @@ export const BlackoutProvider = ({ children }) => {
       console.log('📥 Received room state:', roomState);
       if (roomState.words) setWords(roomState.words);
       if (roomState.rawText !== undefined) setRawText(roomState.rawText);
+      if (roomState.blackoutWords !== undefined) setBlackoutWords(roomState.blackoutWords);
       if (roomState.isBlackout !== undefined) setIsBlackout(roomState.isBlackout);
       if (roomState.isInGame !== undefined) setIsInGame(roomState.isInGame);
     });
@@ -66,6 +70,8 @@ export const BlackoutProvider = ({ children }) => {
       value={{
         rawText,
         setRawText,
+        blackoutWords,
+        setBlackoutWords,
         formattedText,
         setFormattedText,
         selectedColor,

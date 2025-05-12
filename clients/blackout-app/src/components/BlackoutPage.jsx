@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useBlackout } from '../context/BlackoutContext';
 import ColorPicker from './ColorPicker';
 import TextInputPanel from './CreationArea/TextInputPanel';
@@ -14,9 +14,13 @@ import '../styles/BlackoutPage.css';
 import EndGameButton from './EndGameButton';
 import UploadImageOCR from './CreationArea/UploadImageOCR';
 import Chatbox from './Chatbox';
+import StatusView from './StatusView';
 
 export default function BlackoutPage() {
   const API_BASE = import.meta.env.VITE_API_BASE;
+  const { id } = useParams();
+  const [doc, setDoc] = useState(null);
+  const [loading, setLoading] = useState(false);  
   const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
   const [tempImageText, setTempImageText] = useState('');
   const [title, setTitle] = useState("");
@@ -25,6 +29,8 @@ export default function BlackoutPage() {
   const {
     rawText,
     setRawText,
+    blackoutWords,
+    setBlackoutWords,
     formattedText,
     setFormattedText,
     selectedColor,
@@ -45,6 +51,33 @@ export default function BlackoutPage() {
   } = useBlackout();
   const fileInputRef = useRef(null); // 用于文件上传的引用
 
+  // 1) Fetch the document when we have an ID
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    fetch(`${API_BASE}api/documents/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load document');
+        return res.json();
+      })
+      .then(data => {
+        setDoc(data);
+        setRawText(data.content);
+        setBlackoutWords(data.blackoutWords);
+        setFormattedText(data.content); 
+        console.log(data)   // <-- set up the text for your blackout UI
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  // 2) Your existing effect: run whenever formattedText changes
+  useEffect(() => {
+    const initialWords = initializeText(formattedText);
+    setWords(initialWords);
+    updateRoomState({ words: initialWords });
+  }, [formattedText]);
+
   // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
   const initializeText = (text) => {
     const tokens = text.match(/\w+|[^\w\s]|[\s]+/gu) || [];
@@ -57,11 +90,6 @@ export default function BlackoutPage() {
       selectedColor: selectedColor,
     }))
   }
-  // This function is called when the component mounts or when the formattedText changes.
-  useEffect(() => {
-    setWords(initializeText(formattedText));
-    updateRoomState({ words: initializeText(formattedText) });
-  }, [formattedText]);
 
   // This function is called when the user clicks on a word in the preview panel.
   const handleWordClick = (wordId) => {
@@ -162,6 +190,12 @@ export default function BlackoutPage() {
     }
   };
 
+  // only show the spinner / error if we actually have an :id in the URL
+  if (id && (loading || !doc)) {
+    return <StatusView loading={loading} doc={doc} />;
+  }
+
+  
   return (
     <div className="blackout-wrapper">
       <header className="blackout-header">
@@ -261,7 +295,12 @@ export default function BlackoutPage() {
 
         <div className="preview-area">
           <PreviewPanel
-            onWordClick={handleWordClick}
+            text={formattedText}
+            blackoutWords={blackoutWords}
+            onWordClick={idx => {
+              // e.g. toggle that index in your blackoutWords state
+              console.log('word clicked:', idx);
+            }}
           />
           <CreationControls
             isBlackout={isBlackout}
@@ -288,4 +327,5 @@ export default function BlackoutPage() {
       </div>
     </div>
   );
+  
 }

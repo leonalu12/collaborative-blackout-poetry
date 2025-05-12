@@ -1,6 +1,6 @@
 // ModalWindow for showing article detail
 import React from 'react';
-import './PoemModal.css';
+import '../styles/PoemModal.css';
 
 export default function PoemModal({ isOpen, onClose, poem }) {
   if (!isOpen) return null;

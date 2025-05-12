@@ -1,3 +1,4 @@
+// seed.js
 // Import database connection and Mongoose models
 const db = require('./config/blackout-db');
 const User = require('./models/User');
@@ -19,33 +20,18 @@ async function seed() {
 
   // Create 4 users: Alice, Bob, Charlie, and Test
   const [alice, bob, charlie, testUser] = await User.create([
-    {
-      name: 'Alice',
-      password: 'hashedpassword123',
-      email: 'alice@example.com',
-    },
-    {
-      name: 'Bob',
-      password: 'hashedpassword456',
-      email: 'bob@example.com',
-    },
-    {
-      name: 'Charlie',
-      password: 'hashedpassword789',
-      email: 'charlie@example.com',
-    },
-    {
-      name: 'Test',
-      password: '78907890',
-      email: 'test@example.com',
-    },
+    { name: 'Alice', password: 'hashedpassword123', email: 'alice@example.com' },
+    { name: 'Bob', password: 'hashedpassword456', email: 'bob@example.com' },
+    { name: 'Charlie', password: 'hashedpassword789', email: 'charlie@example.com' },
+    { name: 'Test', password: '78907890', email: 'test@example.com' },
   ]);
 
   // Create a private blackout document with Alice as the only collaborator
   const blackout1 = await BlackoutDocument.create({
     documentName: 'Blackout Document 1',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    blackoutWords: [],
+    // Blackout "dolor" (index 2) and "adipiscing" (index 5)
+    blackoutWords: [ { index: 2 }, { index: 5 } ],
     collaborators: [alice._id],
     state: 'private',
   });
@@ -66,11 +52,12 @@ async function seed() {
   interaction1.comments.push(comment1._id);
   await interaction1.save();
 
-  // Create public blackout documents
+  // Create public blackout documents with sample blackoutWords
   const blackout2 = await BlackoutDocument.create({
     documentName: 'Public Document',
     content: 'Pulvinar vivamus fringilla lacus nec metus bibendum egestas...',
-    blackoutWords: [],
+    // Blackout "fringilla" (index 2) and "bibendum" (index 7)
+    blackoutWords: [ { index: 2 }, { index: 7 } ],
     collaborators: [alice._id],
     state: 'public',
   });
@@ -78,7 +65,8 @@ async function seed() {
   const blackout4 = await BlackoutDocument.create({
     documentName: 'Public Poem A',
     content: 'The rain falls gently on the leaves...',
-    blackoutWords: [],
+    // Blackout "rain" (index 1)
+    blackoutWords: [ { index: 1 } ],
     collaborators: [bob._id],
     state: 'public',
   });
@@ -86,7 +74,8 @@ async function seed() {
   const blackout5 = await BlackoutDocument.create({
     documentName: 'Public Poem B',
     content: 'Night whispers secrets to the stars...',
-    blackoutWords: [],
+    // Blackout "whispers" (index 1)
+    blackoutWords: [ { index: 1 } ],
     collaborators: [charlie._id],
     state: 'public',
   });
@@ -94,7 +83,8 @@ async function seed() {
   const blackout6 = await BlackoutDocument.create({
     documentName: 'Public Poem C',
     content: 'Beneath the moon, the waves still sing...',
-    blackoutWords: [],
+    // Blackout "moon," (index 2) and "waves" (index 5)
+    blackoutWords: [ { index: 2 }, { index: 5 } ],
     collaborators: [],
     state: 'public',
   });
@@ -126,7 +116,8 @@ async function seed() {
   const blackout3 = await BlackoutDocument.create({
     documentName: 'Shared Document',
     content: 'Pulvinar vivamus fringilla lacus nec metus bibendum egestas...',
-    blackoutWords: [],
+    // Blackout "lacus" (index 4)
+    blackoutWords: [ { index: 4 } ],
     collaborators: [alice._id, bob._id, charlie._id],
     state: 'private',
   });

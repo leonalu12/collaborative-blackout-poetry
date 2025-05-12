@@ -1,0 +1,85 @@
+/* src/components/StatusView.css */
+
+/* Fullscreen fixed container centered in viewport */
+.status-view {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background: transparent;
+    z-index: 1000;
+  }
+  
+  /* When in “loading” mode, lay out spinner + text side by side */
+  .status-view.status-view--loading {
+    flex-direction: row;
+  }
+  
+  /* Spinner icon */
+  .status-view__spinner {
+    width: 2rem;
+    height: 2rem;
+    animation: spin 1s linear infinite;
+    color: #4299e1;
+  }
+  
+  /* Loading text */
+  .status-view__text {
+    margin-left: 0.75rem;
+    font-size: 1.125rem;
+    color: #4a5568;
+  }
+  
+  /* Error icon */
+  .status-view__icon {
+    width: 3rem;
+    height: 3rem;
+    color: #f56565;
+  }
+  
+  /* Error title */
+  .status-view__title {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #c53030;
+  }
+  
+  /* Error description */
+  .status-view__description {
+    margin-top: 0.5rem;
+    color: #718096;
+    text-align: center;
+    max-width: 300px;
+  }
+  
+  /* Back button */
+  .status-view__button {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #3182ce;
+    color: #fff;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .status-view__button:hover {
+    background-color: #2b6cb0;
+  }
+  
+  .status-view__button:focus {
+    outline: 2px solid #2c5282;
+    outline-offset: 2px;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  

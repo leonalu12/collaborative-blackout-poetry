@@ -1,0 +1,48 @@
+/* src/components/PreviewPanel.css */
+
+/* Container: dark background with white text for contrast */
+  .preview-panel {
+    background-color: #2d3748;
+    color: #fff;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  
+    /* ← add this */
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Words that are blacked out (hidden) */
+  .preview-panel .blackout-word {
+    background-color: #000;
+    color: #000;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  
+  /* Words that can be clicked */
+  .preview-panel .clickable-word {
+    cursor: pointer;
+    position: relative;
+    padding: 0 2px;
+    transition: background-color 0.2s ease;
+    color: inherit;
+  }
+  
+  /* Style for words that are selected (data-selected="true") */
+  .preview-panel span[data-selected="true"] {
+    background-color: rgba(49, 130, 206, 0.2); /* light blue highlight */
+    border: 1px solid #3182ce;                   /* blue border */
+    border-radius: 2px;
+    color: #fff;
+  }
+  
+  /* Ensure blackout-word has highest precedence */
+  .preview-panel .blackout-word[data-selected="true"] {
+    /* Blackout remains solid even if selected */
+    background-color: #000;
+    color: #000;
+    border: none;
+  }
+  
