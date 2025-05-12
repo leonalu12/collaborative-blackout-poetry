@@ -316,6 +316,7 @@ export default function BlackoutPage() {
           onClose={() => setShowSaveConfirmation(false)}
           title={title}  // ✅ 传递标题
           words={words}  // ✅ 传递 blackout 处理的文本
+          rawText={rawText}  // ✅ 传入 rawText
         />
 
         <div className="chatbox-section">

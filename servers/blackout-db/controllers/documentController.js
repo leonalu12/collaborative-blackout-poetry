@@ -24,19 +24,17 @@ const getDocumentById = async (req, res) => {
 // Create a document
 const createDocument = async (req, res) => {
   try {
-    const { documentName, blackoutWords, state } = req.body;
+    const { documentName, blackoutWords, content, state } = req.body;
 
     if (!documentName) return res.status(400).json({ error: "Title is required" });
 
     const newDoc = new BlackoutDocument({
       documentName,
+      content,
       blackoutWords: (blackoutWords || []).map(word => ({
         index: word.index,
         text: word.text
-
-      })), 
-
-
+      })),
       state: state || "private",
     });
 
@@ -46,7 +44,6 @@ const createDocument = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
-
 
 // Update a document
 const updateDocument = async (req, res) => {
