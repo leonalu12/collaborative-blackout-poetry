@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import '../styles/BlackoutEditor.css';
 import { useBlackout } from '../context/BlackoutContext'; 
+import { useNavigate } from 'react-router-dom';
 
 function BlackoutEditor( {  }) {
+  const navigate = useNavigate();
   const {
     socket,
     roomId, setRoomId,
     joinedRoom, setJoinedRoom,
     // words, rawText, isBlackout, isInGame,  
-    setWords, setRawText, setIsBlackout, setIsInGame
+    setWords, 
+    setRawText, 
+    setIsBlackout, 
+    setIsInGame,
+    setTitle, 
+    setBlackoutWords, 
+    setFormattedText,
   } = useBlackout();
 
 
@@ -24,8 +32,10 @@ function BlackoutEditor( {  }) {
 
 
   const createRoom = () => {
+    navigate('/', { replace: true });
     const newRoomId = crypto.randomUUID();
     setRoomId(newRoomId);
+
   };
 
   const copyToClipboard = async () => {
@@ -43,9 +53,13 @@ function BlackoutEditor( {  }) {
     setRoomId(''); 
     setJoinedRoom(false);
     setWords([]);
+    setTitle('');
+    setBlackoutWords([]);
+    setFormattedText('');
     setRawText('Left the room!');
     setIsBlackout(false);
     setIsInGame(false);
+    navigate('/', { replace: true });
   };
 
   return (

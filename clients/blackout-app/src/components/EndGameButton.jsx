@@ -6,6 +6,7 @@ const EndGameButton = () => {
     const navigate = useNavigate();
     const {
         setIsInGame,
+        setTitle,
         setRawText,
         setBlackoutWords,
         setFormattedText,
@@ -14,6 +15,7 @@ const EndGameButton = () => {
     } = useBlackout(); // Import the context to manage state
     const handleEndGame = () => {
         setIsInGame(false);
+        setTitle(''); // Reset the title or set it to a new value
         setRawText('New game started!'); // Reset the raw text or set it to a new value
         setBlackoutWords([]); // Clear the blackout words
         setFormattedText(''); // Reset the formatted text

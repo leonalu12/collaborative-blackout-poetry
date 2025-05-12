@@ -5,6 +5,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const connectDB = require('../config/blackout-db');
+const { title } = require('process');
 
 const app = express();
 const server = http.createServer(app);
@@ -54,6 +55,7 @@ io.on('connection', (socket) => {
     // initialize the room if it doesn't exist
     if (!poemRooms[roomId]) {
       poemRooms[roomId] = {
+        title: '',
         rawText: '',
         words: [],
         players: [],
@@ -88,12 +90,13 @@ io.on('connection', (socket) => {
     });
 
 
-      socket.on('update-room-state', ({ roomId, rawText, words, isBlackout, isInGame }) => {
+      socket.on('update-room-state', ({ roomId, title, rawText, words, isBlackout, isInGame }) => {
         if (!poemRooms[roomId]) return;
       
         // 更新对应房间状态
         poemRooms[roomId] = {
           ...poemRooms[roomId],
+          title,
           rawText,
           words,
           isBlackout,
