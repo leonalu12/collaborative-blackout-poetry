@@ -4,6 +4,7 @@ import socket from '../utils/socket';
 const BlackoutContext = createContext();
 
 export const BlackoutProvider = ({ children }) => {
+  const [title, setTitle] = useState('');
   const [rawText, setRawText] = useState('This is a sample text for blackout. You can edit or replace it.');
   const [blackoutWords, setBlackoutWords] = useState([]);
   const [formattedText, setFormattedText] = useState('');
@@ -20,6 +21,7 @@ export const BlackoutProvider = ({ children }) => {
 
   const updateRoomState = (updatedFields) => {
     const nextState = {
+      title,
       rawText,
       blackoutWords,
       words,
@@ -27,6 +29,7 @@ export const BlackoutProvider = ({ children }) => {
       isInGame,
       ...updatedFields, // 局部更新
     };
+    setTitle(nextState.title);
     setRawText(nextState.rawText);
     setBlackoutWords(nextState.blackoutWords);
     setWords(nextState.words);
@@ -42,6 +45,7 @@ export const BlackoutProvider = ({ children }) => {
     socket.on('room-state', (roomState) => {
       console.log('📥 Received room state:', roomState);
       if (roomState.words) setWords(roomState.words);
+      if (roomState.title !== undefined) setTitle(roomState.title);
       if (roomState.rawText !== undefined) setRawText(roomState.rawText);
       if (roomState.blackoutWords !== undefined) setBlackoutWords(roomState.blackoutWords);
       if (roomState.isBlackout !== undefined) setIsBlackout(roomState.isBlackout);
@@ -68,6 +72,8 @@ export const BlackoutProvider = ({ children }) => {
   return (
     <BlackoutContext.Provider
       value={{
+        title,
+        setTitle,
         rawText,
         setRawText,
         blackoutWords,

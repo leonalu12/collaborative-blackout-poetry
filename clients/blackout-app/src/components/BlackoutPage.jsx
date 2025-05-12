@@ -23,10 +23,12 @@ export default function BlackoutPage() {
   const [loading, setLoading] = useState(false);  
   const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
   const [tempImageText, setTempImageText] = useState('');
-  const [title, setTitle] = useState("");
+
 
   const navigate = useNavigate();
   const {
+    title,
+    setTitle,
     rawText,
     setRawText,
     blackoutWords,
@@ -62,9 +64,11 @@ export default function BlackoutPage() {
       })
       .then(data => {
         setDoc(data);
+        setTitle(data.documentName);
         setRawText(data.content);
         setBlackoutWords(data.blackoutWords);    // [{ index: 0, length:1 }, …]
         setFormattedText(data.content);
+        setIsBlackout(true);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -87,8 +91,8 @@ export default function BlackoutPage() {
       return {
         id: idx,
         text: token,
-        isBlackout: isBlack,
-        isSelected: false,
+        isBlackout: !isBlack,
+        isSelected: isBlack,
         selectedColor,
       };
     });
