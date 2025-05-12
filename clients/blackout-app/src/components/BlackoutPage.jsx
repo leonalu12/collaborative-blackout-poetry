@@ -51,7 +51,7 @@ export default function BlackoutPage() {
   } = useBlackout();
   const fileInputRef = useRef(null); // 用于文件上传的引用
 
-  // 1) Fetch the document when we have an ID
+// 1) Fetch doc + blackoutWords
   useEffect(() => {
     if (!id) return;
     setLoading(true);
@@ -63,35 +63,38 @@ export default function BlackoutPage() {
       .then(data => {
         setDoc(data);
         setRawText(data.content);
-        setBlackoutWords(data.blackoutWords);
-        setFormattedText(data.content); 
-        console.log(data)   // <-- set up the text for your blackout UI
+        setBlackoutWords(data.blackoutWords);    // [{ index: 0, length:1 }, …]
+        setFormattedText(data.content);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id]);
 
-  // 2) Your existing effect: run whenever formattedText changes
+  // 2) Re-init words whenever text OR blackoutWords changes
   useEffect(() => {
-    const initialWords = initializeText(formattedText);
+    const initialWords = initializeText(formattedText, blackoutWords);
     setWords(initialWords);
     updateRoomState({ words: initialWords });
-  }, [formattedText]);
+  }, [formattedText, blackoutWords]);
 
-  // 将formattedText文本分割成单词和空格，并为每个单词添加一个唯一的ID
-  const initializeText = (text) => {
+  // 3) Split and tag
+  const initializeText = (text, blackoutArr = []) => {
     const tokens = text.match(/\w+|[^\w\s]|[\s]+/gu) || [];
-    //\w+：连续的字母数字（即单词）[^\w\s]：非字母数字、非空格的符号（例如 , . ! ?）[\s]+：连续的空格、换行、制表符等
-    return tokens.map((token, index) => ({
-      id: index,
-      text: token,
-      isBlackout: false,
-      isSelected: false,
-      selectedColor: selectedColor,
-    }))
-  }
+    return tokens.map((token, idx) => {
+      const isBlack = blackoutArr.some(bw =>
+        idx >= bw.index && idx < bw.index + (bw.length || 1)
+      );
+      return {
+        id: idx,
+        text: token,
+        isBlackout: isBlack,
+        isSelected: false,
+        selectedColor,
+      };
+    });
+  };
 
-  // This function is called when the user clicks on a word in the preview panel.
+    // This function is called when the user clicks on a word in the preview panel.
   const handleWordClick = (wordId) => {
     if (isBlackout) return; // Do nothing if blackout is active
     const newWords = words.map(word =>
@@ -295,12 +298,7 @@ export default function BlackoutPage() {
 
         <div className="preview-area">
           <PreviewPanel
-            text={formattedText}
-            blackoutWords={blackoutWords}
-            onWordClick={idx => {
-              // e.g. toggle that index in your blackoutWords state
-              console.log('word clicked:', idx);
-            }}
+            onWordClick={handleWordClick}
           />
           <CreationControls
             isBlackout={isBlackout}
