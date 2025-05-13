@@ -1,0 +1,32 @@
+.blackout-header {
+  
+  background-color: #c9f0ff;
+  padding: 1em 1.5em;  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.header-right {
+  flex-shrink: 0;
+}
+
+.header-logo {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+}
+
+.header-title {
+  font-size: 1.5em;
+  margin: 0;
+  color: #333;
+  font-weight: bold;
+}

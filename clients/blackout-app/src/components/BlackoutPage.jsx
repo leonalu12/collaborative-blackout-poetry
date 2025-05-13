@@ -6,10 +6,9 @@ import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
 import UploadArticle from './CreationArea/UploadArticle';
-import LogoutButton from './LogoutButton';
+import Header from './Header';
 import BlackoutEditor from './BlackoutEditor';
 import SaveModal from './SaveModal/SaveModal';
-import logo from '../assets/logo_poem.png';
 import '../styles/BlackoutPage.css';
 import EndGameButton from './EndGameButton';
 import UploadImageOCR from './CreationArea/UploadImageOCR';
@@ -222,15 +221,7 @@ export default function BlackoutPage() {
 
   return (
     <div className="blackout-wrapper">
-      <header className="blackout-header">
-        <div className="header-left">
-          <img src={logo} alt="Logo" className="header-logo" />
-          <h1 className="header-title">Blackout Poem</h1>
-        </div>
-        <div className="header-right">
-          <LogoutButton />
-        </div>
-      </header>
+      <Header />
       <div className="blackout-page">
         <div className="sidebar">
           <button className="nav-btn active">Blackout</button>
