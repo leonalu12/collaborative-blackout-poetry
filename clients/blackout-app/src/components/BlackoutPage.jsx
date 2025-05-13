@@ -71,6 +71,7 @@ export default function BlackoutPage() {
         setBlackoutWords(data.blackoutWords);    // [{ index: 0, length:1 }, …]
         setFormattedText(data.content);
         setIsBlackout(true);
+        setIsInGame(true); 
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -233,7 +234,12 @@ export default function BlackoutPage() {
       <div className="blackout-page">
         <div className="sidebar">
           <button className="nav-btn active">Blackout</button>
-          <button className="nav-btn" onClick={() => navigate('/gallery')}>Gallery</button>
+          <button className="nav-btn" 
+          disabled={isInGame}
+          style={{ backgroundColor: isInGame ? '#ccc' : `#79c9ff`, color: isInGame ? '#666' : '#fff' }}
+          onClick={() => navigate('/gallery')
+            
+          }>Gallery</button>
           <div>
             <BlackoutEditor />
           </div>

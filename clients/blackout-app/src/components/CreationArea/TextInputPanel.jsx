@@ -27,6 +27,7 @@ const{
           onClick={onGenerate}
           // disabled={isGenerating}
           disabled={isInGame}
+          style={{ backgroundColor: isInGame ? '#ccc' : '#79c9ff', color: isInGame ? '#666' : '#fff' }}
         >
           {isGenerating ? "Generating…" : "Generate with ChatGPT"}
         </button>
@@ -34,6 +35,7 @@ const{
           className="enter-text-btn"
           onClick={() => onSubmit(value)}
           disabled={isInGame} // Disable if in game mode
+          style={{ backgroundColor: isInGame ? '#ccc' : '#79c9ff', color: isInGame ? '#666' : '#fff' }}
         >
           {isInGame?"Cannot Change Articale in Game" : "Submit to Editor"}
         </button>
