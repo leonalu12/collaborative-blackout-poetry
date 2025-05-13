@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/GalleryPage.css';
 import '../styles/PoemModal.css';
+import LikeButton from './CommunityInteraction/LikeButton';
 
 export default function GalleryPage() {
   const API_BASE = import.meta.env.VITE_API_BASE;
@@ -55,7 +56,7 @@ export default function GalleryPage() {
   };
 
   const handleCardClick = (doc) => {
-    setSelectedDoc(doc);
+    //setSelectedDoc(doc);
   };
 
   const closeModal = () => {
@@ -137,16 +138,22 @@ export default function GalleryPage() {
 
                 <h3>{doc.documentName}</h3>
                 <p>{doc.content?.slice(0, 80)}...</p>
-                <div className="doc-type">❤️ {doc.likes?.length || 0}</div>
-                <Link to={`/${doc._id}`}>
-                  <button
-                    type="button"
-                    className="open-btn"
-                    onClick={e => e.stopPropagation()}  // prevent the card’s onClick if you want
+                <div className="card-footer">
+                  <Link 
+                    to={`/${doc._id}`} 
+                    onClick={e => e.stopPropagation()}
                   >
-                    Open
-                  </button>
-                </Link>
+                    <button type="button" className="open-btn">
+                      Open
+                    </button>
+                  </Link>
+
+                  <LikeButton
+                    documentId={doc._id}
+                    initialLikes={doc.likes || []}
+                    userId={userId}
+                  />
+                </div>
               </div>
             ))}
           </div>

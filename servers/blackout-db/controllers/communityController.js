@@ -53,10 +53,51 @@ const deleteInteraction = async (req, res) => {
   }
 };
 
+// Increment the like count for a document
+const likeInteraction = async (req, res) => {
+  try {
+    const { id } = req.params;           // documentId
+    const { userId } = req.body;
+
+    let ci = await CommunityInteraction.findOne({ documentId: id });
+    if (!ci) {
+      ci = new CommunityInteraction({ documentId: id, Likes: 0, comments: [] });
+    }
+    ci.Likes = (ci.Likes || 0) + 1;
+    await ci.save();
+
+    res.status(200).json({ Likes: ci.Likes });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Add a new comment
+const addComment = async (req, res) => {
+  try {
+    const { id } = req.params;        // documentId
+    const { userId, comment } = req.body;
+
+    let ci = await CommunityInteraction.findOne({ documentId: id });
+    if (!ci) {
+      ci = new CommunityInteraction({ documentId: id, Likes: 0, comments: [] });
+    }
+    const newComment = await Comment.create({ userId, text: comment });
+    ci.comments.push(newComment._id);
+    await ci.save();
+
+    res.status(201).json(newComment);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   getInteractions,
   getInteractionById,
   createInteraction,
   updateInteraction,
-  deleteInteraction
+  deleteInteraction,
+  likeInteraction,
+  addComment
 };
