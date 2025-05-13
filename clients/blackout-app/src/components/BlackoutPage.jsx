@@ -20,7 +20,7 @@ export default function BlackoutPage() {
   const API_BASE = import.meta.env.VITE_API_BASE;
   const { id } = useParams();
   const [doc, setDoc] = useState(null);
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false);
   const [showUploadImagePopup, setShowUploadImagePopup] = useState(false);
   const [tempImageText, setTempImageText] = useState('');
 
@@ -49,7 +49,8 @@ export default function BlackoutPage() {
     words,
     setWords,
     updateRoomState,
-    roomId
+    roomId,
+    joinedRoom
   } = useBlackout();
   const fileInputRef = useRef(null); // 用于文件上传的引用
 
@@ -66,6 +67,7 @@ export default function BlackoutPage() {
         setDoc(data);
         setTitle(data.documentName);
         setRawText(data.content);
+
         setBlackoutWords(data.blackoutWords);    // [{ index: 0, length:1 }, …]
         setFormattedText(data.content);
         setIsBlackout(true);
@@ -82,20 +84,34 @@ export default function BlackoutPage() {
   }, [formattedText, blackoutWords]);
 
   // 3) Split and tag
+  // 3) Split and tag
   const initializeText = (text, blackoutArr = []) => {
     const tokens = text.match(/\w+|[^\w\s]|[\s]+/gu) || [];
-    return tokens.map((token, idx) => {
-      const isBlack = blackoutArr.some(bw =>
-        idx >= bw.index && idx < bw.index + (bw.length || 1)
-      );
-      return {
-        id: idx,
+
+    if (id == null) {
+      return tokens.map((token, index) => ({
+        id: index,
         text: token,
-        isBlackout: !isBlack,
-        isSelected: isBlack,
-        selectedColor,
-      };
-    });
+        isBlackout: false,
+        isSelected: false,
+        selectedColor: selectedColor,
+      }));
+
+    }
+    else {
+      return tokens.map((token, idx) => {
+        const isBlack = blackoutArr.some(bw =>
+          idx >= bw.index && idx < bw.index + (bw.length || 1)
+        );
+        return {
+          id: idx,
+          text: token,
+          isBlackout: !isBlack,
+          isSelected: isBlack,
+          selectedColor,
+        };
+      });
+    }
   };
 
     // This function is called when the user clicks on a word in the preview panel.
@@ -125,7 +141,7 @@ export default function BlackoutPage() {
     setWords(updatedWords);
     const newBlackoutState = !isBlackout
     setIsBlackout(newBlackoutState);// Toggle the blackout state    
-    
+
     updateRoomState({ words: updatedWords, isBlackout: newBlackoutState }); // Update the room state with the new blackout state
   }
 
@@ -135,10 +151,10 @@ export default function BlackoutPage() {
       const res = await fetch(`${API_BASE}api/documents/random`);
       if (!res.ok) throw new Error('Failed to fetch random document');
       const data = await res.json();
-  
+
       setRawText(data.content);
       setIsBlackout(false);
-  
+
       updateRoomState({
         rawText: data.content,
         isBlackout: false
@@ -148,8 +164,8 @@ export default function BlackoutPage() {
       alert('Failed to load random poem.');
     }
   };
-  
-  
+
+
 
 
   const handleUploadText = (text) => {
@@ -159,7 +175,7 @@ export default function BlackoutPage() {
     setIsBlackout(false);
     setShowUploadPopup(false); // Close the popup after confirmation
 
-    updateRoomState({rawText: text })
+    updateRoomState({ rawText: text })
   };
 
   const handleSubmitInputText = (text) => {
@@ -170,7 +186,7 @@ export default function BlackoutPage() {
     setIsBlackout(false);
     setIsInGame(true);// Set isInGame to true when text is submitted, cannot change texts.
 
-    updateRoomState({rawText: text, isInGame: true, isBlackout: false })
+    updateRoomState({ rawText: text, isInGame: true, isBlackout: false })
   }
 
   const handleGenerate = async () => {
@@ -188,7 +204,7 @@ export default function BlackoutPage() {
       setRawText(text);
       setFormattedText("");
       setIsBlackout(false);
-      updateRoomState({rawText: text })
+      updateRoomState({ rawText: text })
     } catch (err) {
       console.error("Generation failed:", err);
       // TODO: show a UI toast or inline error message
@@ -202,7 +218,7 @@ export default function BlackoutPage() {
     return <StatusView loading={loading} doc={doc} />;
   }
 
-  
+
   return (
     <div className="blackout-wrapper">
       <header className="blackout-header">
@@ -210,8 +226,9 @@ export default function BlackoutPage() {
           <img src={logo} alt="Logo" className="header-logo" />
           <h1 className="header-title">Blackout Poem</h1>
         </div>
-
-        <LogoutButton />
+        <div className="header-right">
+          <LogoutButton />
+        </div>
       </header>
       <div className="blackout-page">
         <div className="sidebar">
@@ -264,8 +281,8 @@ export default function BlackoutPage() {
                       className="confirm-btn"
                       onClick={() => {
                         setRawText(tempImageText); // 把识别的文本填入主输入框
-                        setShowUploadImagePopup(false); 
-                        setTempImageText(''); 
+                        setShowUploadImagePopup(false);
+                        setTempImageText('');
                       }}
                     >
                       Confirm
@@ -279,19 +296,20 @@ export default function BlackoutPage() {
               </div>
             </div>
           )}
-
-          <input
-            type="text"
-            placeholder="Enter Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-
+          <div className="text-box">
+            <input
+              type="text"
+              placeholder="Enter Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
           <TextInputPanel
             value={rawText}
             onChange={e => {
               if (isInGame || isBlackout) return;
-              setRawText(e.target.value)}}
+              setRawText(e.target.value)
+            }}
             onSubmit={handleSubmitInputText}
             onGenerate={handleGenerate}
           />
@@ -304,14 +322,13 @@ export default function BlackoutPage() {
           <PreviewPanel
             onWordClick={handleWordClick}
           />
-          <CreationControls
-            isBlackout={isBlackout}
-            onBlackout={handleBlackout}
-            onSave={() => setShowSaveConfirmation(true)}
-          />
-          {isInGame && (
-            <EndGameButton />
-          )}
+          <div className="action-buttons">
+            <button className="blackout-btn" onClick={handleBlackout}>Blackout</button>
+            <button className="save-btn" onClick={() => setShowSaveConfirmation(true)}>Save</button>
+            {isInGame && <EndGameButton />}
+          </div>
+
+
         </div>
 
         {/* Save confirmation popup */}
@@ -323,12 +340,13 @@ export default function BlackoutPage() {
           rawText={rawText}  // ✅ 传入 rawText
         />
 
-        <div className="chatbox-section">
-          {/* 只有加入房间后才显示聊天框 */}
-          {roomId && <Chatbox />}
-        </div>
+        {joinedRoom && (
+          <div className="chatbox-section active">
+            <Chatbox />
+          </div>
+        )}
       </div>
     </div>
   );
-  
+
 }

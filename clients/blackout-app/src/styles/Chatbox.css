@@ -1,29 +1,68 @@
 /* styles/Chatbox.css */
+.chatbox-section {
+  display: none;
+}
+
+.chatbox-section.active {
+  display: flex;
+  flex-direction: column;
+  width: 300px;             /* ✅ use flex so Chatbox can grow/shrink properly */
+  height: 100%;  
+  max-height: none;  
+  overflow: hidden;  
+  flex: 1;
+  background-color: white;    
+  padding: 2em;
+  box-sizing: border-box;
+  border-left: 3px solid #79c9ff;  
+}
+
 .chatbox {
     border: 1px solid #ccc;
     padding: 1rem;
-    max-width: 400px;
     margin-top: 20px;
+    display: flex;                /* ✨ 让内部结构可用 flex */
+    flex-direction: column;
+    flex: 1;                      /* ✨ 让 messages 区域自动拉伸 */  
+    height: 100%;    
+    box-sizing: border-box;
   }
   
   .messages {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding-right: 4px;
+    overflow-y: auto; 
+  
   }
   
+  /* 气泡公共样式 */
   .message {
-    padding: 5px;
-    border-bottom: 1px solid #eee;
+    padding: 0.6em 1em;
+    max-width: 75%;
+    word-break: break-word;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    
   }
   
-  .message strong {
-    font-weight: bold;
+  /* 自己发的消息 */
+  .message.self {
+    align-self: flex-end;
+    background-color: #79c9ff;
+    color: white;
+    border-radius: 16px 16px 0 16px;
   }
   
-  .message span {
-    color: #888;
-    font-size: 0.85rem;
+  /* 别人发的消息 */
+  .message.other {
+    align-self: flex-start;
+    background-color: #e6f7ff;
+    color: #333;
+    border-radius: 16px 16px 16px 0;
   }
   
   input {
@@ -38,9 +77,36 @@
     color: white;
     border: none;
     cursor: pointer;
+    
   }
   
   button:hover {
     background-color: #0056b3;
   }
   
+  .input-area {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 1em;
+  }
+  
+  .input-area input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  .input-area button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    height: 100%;      
+  }
+  
+  .input-area button:hover {
+    background-color: #0056b3;
+  }

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function BlackoutEditor( {  }) {
   const navigate = useNavigate();
+
   const {
     socket,
     roomId, setRoomId,
@@ -50,7 +51,7 @@ function BlackoutEditor( {  }) {
 
   const exitRoom = () => {
     socket.emit('leave-document', roomId); // optional for future cleanup
-    setRoomId(''); 
+    setRoomId('');
     setJoinedRoom(false);
     setWords([]);
     setTitle('');
@@ -66,10 +67,10 @@ function BlackoutEditor( {  }) {
     <div className="blackout-sidebar">
       {!joinedRoom ? (
         <>
-          <button onClick={createRoom}>Create New Room</button>
+          <button onClick={createRoom}>New Room</button>
           <input
             type="text"
-            placeholder="Paste Room ID"
+            placeholder="Room ID"
             value={roomId}
             onChange={(e) => setRoomId(e.target.value)}
           />
@@ -78,9 +79,10 @@ function BlackoutEditor( {  }) {
       ) : (
         <>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <p className="room-id">
-              Room ID: <code className="room-id">{roomId}</code>
-            </p>
+            <div className="room-info">
+              <p className="room-label">Room ID:</p>
+              <p className="room-id">{roomId}</p>
+            </div>
             <button onClick={copyToClipboard} style={{ marginBottom: '0.5rem' }}>
               Copy Room ID
             </button>

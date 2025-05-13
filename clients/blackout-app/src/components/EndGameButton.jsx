@@ -11,10 +11,12 @@ const EndGameButton = () => {
         setBlackoutWords,
         setFormattedText,
         setWords,
-        updateRoomState
+        updateRoomState,
+        setIsBlackout,
     } = useBlackout(); // Import the context to manage state
     const handleEndGame = () => {
         setIsInGame(false);
+        setIsBlackout(false);
         setTitle(''); // Reset the title or set it to a new value
         setRawText('New game started!'); // Reset the raw text or set it to a new value
         setBlackoutWords([]); // Clear the blackout words
@@ -27,7 +29,7 @@ const EndGameButton = () => {
 
     return (
         <button onClick={handleEndGame} className="end-game-button">
-            start New Game
+            Start New Game
         </button>
     );
 };

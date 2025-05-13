@@ -2,7 +2,9 @@ import React from 'react';
 import './SaveModal.css';
 import html2canvas from 'html2canvas';
 
+
 const SaveModal = ({ isOpen, onClose, title, words, rawText }) => {
+
   const API_BASE = import.meta.env.VITE_API_BASE;
   if (!isOpen) return null;
 
@@ -19,7 +21,7 @@ const handleSaveToGallery = async () => {
   }
 
   const blackoutWordsArray = words
-    .filter(word => word.isBlackout)
+    .filter(word => !word.isBlackout)
     .map(word => ({ index: word.id, text: word.text }));
 
   try {
