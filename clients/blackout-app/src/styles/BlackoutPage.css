@@ -114,11 +114,12 @@
 }
 
 .preview-box {
-  background-color: #87f0df;
+  background-color: #f2f9ff;
   padding: 1em;
   min-height: 200px;
   margin-bottom: 1em;
   border-radius: 5px;
+  color: #333;
 }
 
 .action-buttons {
@@ -133,6 +134,7 @@
   border: none;
   font-weight: bold;
   cursor: pointer;
+  width: 140px; 
 }
 
 .save-btn {
@@ -162,19 +164,27 @@
 
 .upload-popup-content {
   background: white;
-  padding: 24px;
-  border-radius: 10px;
-  width: 400px;
+  padding: 2em;
+  border-radius: 20px;
+  width: 360px;
   max-width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+
 .upload-popup-content h3 {
-  margin-top: 0;
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #007acc;
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: 'Comic Sans MS', sans-serif;
 }
 
 .upload-popup-content button {
@@ -192,15 +202,22 @@
 }
 
 .close-btn {
-  margin-left: 10px;
-  background-color: #aaa;
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background-color: #bbb;
+  color: white;
+  font-size: 0.9rem;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Comic Sans MS', sans-serif;
 }
 
 .close-btn:hover {
   background-color: #888;
 }
-
-
 .word:hover {
  text-decoration: underline;
   cursor: pointer;

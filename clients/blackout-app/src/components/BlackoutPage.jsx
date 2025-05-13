@@ -253,7 +253,7 @@ export default function BlackoutPage() {
               <div className="upload-popup-content">
                 <h3>Upload a .txt file</h3>
                 <UploadArticle ref={fileInputRef} onConfirm={handleUploadText} />
-                <button className="close-btn" onClick={() => setShowUploadPopup(false)}>Close</button>
+                <button className="close-btn" onClick={() => setShowUploadPopup(false)}>X</button>
               </div>
             </div>
           )}
@@ -291,7 +291,7 @@ export default function BlackoutPage() {
                 )}
 
                 <button className="close-btn" onClick={() => setShowUploadImagePopup(false)}>
-                  Close
+                  X
                 </button>
               </div>
             </div>
@@ -312,6 +312,7 @@ export default function BlackoutPage() {
             }}
             onSubmit={handleSubmitInputText}
             onGenerate={handleGenerate}
+            isInGame={isInGame}
           />
 
           <ColorPicker onColorChange={setSelectedColor} />
@@ -323,7 +324,11 @@ export default function BlackoutPage() {
             onWordClick={handleWordClick}
           />
           <div className="action-buttons">
-            <button className="blackout-btn" onClick={handleBlackout}>Blackout</button>
+
+          <button className="blackout-btn" onClick={handleBlackout}>
+            {isBlackout ? 'Unblackout' : 'Blackout'}
+          </button>
+
             <button className="save-btn" onClick={() => setShowSaveConfirmation(true)}>Save</button>
             {isInGame && <EndGameButton />}
           </div>

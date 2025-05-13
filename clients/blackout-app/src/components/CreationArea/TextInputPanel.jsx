@@ -1,6 +1,7 @@
 import React from 'react';
 import { useBlackout } from '../../context/BlackoutContext'; // Import the BlackoutContext to access the blackout state and functions
 
+
 export default function TextInputPanel({
   value,
   onChange,
@@ -24,7 +25,8 @@ const{
         <button
           className="generate-btn"
           onClick={onGenerate}
-          disabled={isGenerating}
+          // disabled={isGenerating}
+          disabled={isInGame}
         >
           {isGenerating ? "Generating…" : "Generate with ChatGPT"}
         </button>
