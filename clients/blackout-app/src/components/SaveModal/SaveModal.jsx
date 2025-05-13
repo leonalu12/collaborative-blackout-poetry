@@ -21,8 +21,10 @@ const handleSaveToGallery = async () => {
   }
 
   const blackoutWordsArray = words
-    .filter(word => !word.isBlackout)
+    .filter(word => word.isBlackout)
     .map(word => ({ index: word.id, text: word.text }));
+
+    console.log("Saving blackoutWords:", blackoutWordsArray.map(w => `${w.index}: ${w.text}`));
 
   try {
     const response = await fetch(`http://localhost:5050/api/documents`, {
