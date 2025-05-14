@@ -151,21 +151,4 @@
   margin-top: 0.5rem;
 }
 
-/* force like button into a square */
-.like-btn {
-  width: 2.4rem;              /* same width & height */
-  height: 2.4rem;
-  padding: 0;                 /* remove extra padding */
-  display: flex;
-  align-items: center;
-  justify-content: center;    /* center the heart & count */
-  border-radius: 0.4rem;      /* tweak as you like */
-  font-size: 1.1rem;          /* adjust icon size */
-}
 
-/* optional: shrink the count text a bit */
-.like-btn::after {
-  content: attr(data-count);
-  margin-left: 0.2rem;
-  font-size: 0.9rem;
-}

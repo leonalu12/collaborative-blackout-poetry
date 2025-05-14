@@ -61,66 +61,15 @@ export default function GalleryPage() {
     setSelectedDoc(doc);
   };
 
-  const closeModal = () => {
-    setSelectedDoc(null);
-    setCommentText('');
-  };
-
-const handleLike = async (docId) => {
-  try {
-    await axios.put(`${API_BASE}api/community/${docId}/like`, { userId });
-
-    // Fetch updated like list
-    const res = await axios.get(`${API_BASE}api/community/${docId}/likes`);
-    const updatedLikes = res.data.likes || [];
-
-    setLikeCount(updatedLikes.length);
-    setLiked(updatedLikes.includes(userId));
-    console.log('Updated likes:', updatedLikes);
-  } catch (err) {
-    console.error('Error liking:', err);
-  }
-};
-
-  const handleComment = async (docId) => {
-    if (!commentText.trim()) return;
+  const updateDocumentFromServer = async (docId) => {
     try {
-      await axios.post(`${API_BASE}api/community/${docId}/comments`, {
-        userId,
-        comment: commentText
-      });
-      setCommentText('');
+      const res = await axios.get(`${API_BASE}api/documents/${docId}`);
+      const updatedDoc = res.data;
+      setDocuments(prevDocs =>
+        prevDocs.map(doc => (doc._id === docId ? updatedDoc : doc))
+      );
     } catch (err) {
-      console.error('Error commenting:', err);
-    }
-  };
-
-  const handlePublishToggle = async (docId, currentState) => {
-    try {
-      const newState = currentState === 'private' ? 'public' : 'private';
-      const res = await axios.put(`${API_BASE}api/documents/${docId}/publish`, { state: newState });
-
-      if (filter === 'private' && res.data.state === 'public') {
-        setDocuments(prev => prev.filter(doc => doc._id !== docId));
-      }
-    } catch (err) {
-      console.error('Error toggling publish state:', err);
-    }
-  };
-
-  const handleEdit = async (doc) => {
-    try {
-      const res = await axios.get(`${API_BASE}api/documents/${doc._id}`);
-      const data = res.data;
-      localStorage.setItem('editPoemData', JSON.stringify({
-        documentId: data._id,
-        originalText: data.originalText || data.content,
-        redactedText: data.redactedText || '',
-        title: data.documentName
-      }));
-      navigate('/blackout');
-    } catch (err) {
-      console.error('Error fetching document for editing:', err);
+      console.error('Error fetching updated document:', err);
     }
   };
 
@@ -147,10 +96,11 @@ const handleLike = async (docId) => {
           <div className="gallery-content-box">
             <div className="card-grid">
               {currentDocs.map(doc => (
-                <div className="doc-card" key={doc._id} onClick={() => handleCardClick(doc)}>
-
-                  <h3>{doc.documentName}</h3>
-                  <p>{doc.content?.slice(0, 80)}...</p>
+                <div className="doc-card" key={doc._id}>
+                  <div onClick={() => handleCardClick(doc)}>
+                    <h3>{doc.documentName}</h3>
+                    <p>{doc.content?.slice(0, 80)}...</p>
+                  </div>
                   <div className="card-footer">
                     <Link 
                       to={`/${doc._id}`} 
@@ -189,10 +139,10 @@ const handleLike = async (docId) => {
 
         {selectedDoc && (
           <DocumentProfile
-            selectedDoc={selectedDoc}
+            selectedDoc={documents.find(doc => doc._id === selectedDoc._id) || selectedDoc}
             userId={userId}
             closeModal={() => setSelectedDoc(null)}
-            refreshDocuments={() => setFilter(filter)} // Optional: if you want to refetch after toggle
+            filter={filter}
           />
         )}
       </div>

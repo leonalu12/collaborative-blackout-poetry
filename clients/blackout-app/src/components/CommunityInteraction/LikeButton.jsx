@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import '../../styles/LikeButton.css'; // Assuming you have a CSS file for styling
 export default function LikeButton({ documentId, initialLikes = [], userId }) {
   const API_BASE = import.meta.env.VITE_API_BASE;
   const [liked, setLiked] = useState(false);

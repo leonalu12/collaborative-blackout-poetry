@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function DocumentProfile({ selectedDoc, userId, closeModal, refreshDocuments, filter }) {
+export default function DocumentProfile({ selectedDoc, userId, closeModal, filter }) {
   const API_BASE = import.meta.env.VITE_API_BASE;
 
   const [commentText, setCommentText] = useState('');
@@ -49,7 +49,6 @@ export default function DocumentProfile({ selectedDoc, userId, closeModal, refre
     try {
       const newState = selectedDoc.state === 'private' ? 'public' : 'private';
       await axios.put(`${API_BASE}api/documents/${selectedDoc._id}/publish`, { state: newState });
-      refreshDocuments?.(); // Optional refresh
       closeModal();
     } catch (err) {
       console.error('Error toggling publish state:', err);
