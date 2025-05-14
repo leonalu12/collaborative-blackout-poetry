@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const communityInteractionSchema = new mongoose.Schema({
   documentId: { type: mongoose.Schema.Types.ObjectId },
-  Likes: Number,
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 });
 

@@ -6,6 +6,7 @@ const {
   updateInteraction,
   deleteInteraction,
   likeInteraction,
+  getLikeStatus,
   addComment
 } = require('../controllers/communityController');
 
@@ -20,6 +21,7 @@ router.delete('/:id', deleteInteraction);
 
 // Like and comment routes
 router.put('/:id/like',     likeInteraction);
+router.get('/:id/likes',     getLikeStatus);
 router.post('/:id/comments', addComment);
 
 module.exports = router;

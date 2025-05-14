@@ -1,10 +1,23 @@
+const CommunityInteraction = require('../models/CommunityInteraction');
 const BlackoutDocument = require('../models/BlackoutDocument');
 
 // Get all documents
 const getDocuments = async (req, res) => {
   try {
     const docs = await BlackoutDocument.find().populate('collaborators');
-    res.json(docs);
+
+    const docsWithLikes = await Promise.all(
+      docs.map(async (doc) => {
+        const ci = await CommunityInteraction.findOne({ documentId: doc._id });
+        const likes = ci?.likes || [];
+        return {
+          ...doc.toObject(),
+          likes
+        };
+      })
+    );
+
+    res.json(docsWithLikes);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

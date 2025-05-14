@@ -58,7 +58,7 @@ async function seed() {
   // Community interaction for document 1
   const interaction1 = await CommunityInteraction.create({
     documentId: blackout1._id,
-    Likes: 10,
+    likes: [alice._id, bob._id],
     comments: [],
   });
   const comment1 = await Comment.create({
@@ -112,7 +112,7 @@ async function seed() {
   // Interaction for Public Document
   const interaction2 = await CommunityInteraction.create({
     documentId: blackout2._id,
-    Likes: 13,
+    likes: [alice._id, charlie._id],
     comments: [],
   });
   const comment2 = await Comment.create({
@@ -141,7 +141,7 @@ async function seed() {
 
   const interaction3 = await CommunityInteraction.create({
     documentId: blackout3._id,
-    Likes: 13,
+    likes: [bob._id],
     comments: [],
   });
 

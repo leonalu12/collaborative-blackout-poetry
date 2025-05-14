@@ -7,14 +7,14 @@ describe('CommunityInteraction API CRUD', () => {
   it('should create an interaction', async () => {
     const res = await request(app)
       .post('/api/community')
-      .send({ documentId: '507f1f77bcf86cd799439011', Likes: 3 });
+      .send({ documentId: '507f1f77bcf86cd799439011', likes: ['507f1f77bcf86cd799439099'] });
 
     expect(res.statusCode).toBe(201);
-    expect(res.body.Likes).toBe(3);
+    expect(res.body.likes).toContain('507f1f77bcf86cd799439099');
   });
 
   it('should return all interactions', async () => {
-    await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439012', Likes: 5 });
+    await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439012', likes: ['507f1f77bcf86cd799439098'] });
 
     const res = await request(app).get('/api/community');
     expect(res.statusCode).toBe(200);
@@ -22,26 +22,26 @@ describe('CommunityInteraction API CRUD', () => {
   });
 
   it('should return an interaction by ID', async () => {
-    const created = await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439013', Likes: 7 });
+    const created = await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439013', likes: ['507f1f77bcf86cd799439097'] });
 
     const res = await request(app).get(`/api/community/${created._id}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body.Likes).toBe(7);
+    expect(res.body.likes).toContain('507f1f77bcf86cd799439097');
   });
 
   it('should update an interaction', async () => {
-    const created = await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439014', Likes: 0 });
+    const created = await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439014', likes: [] });
 
     const res = await request(app)
       .put(`/api/community/${created._id}`)
-      .send({ Likes: 12 });
+      .send({ likes: ['507f1f77bcf86cd799439096'] });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.Likes).toBe(12);
+    expect(res.body.likes).toContain('507f1f77bcf86cd799439096');
   });
 
   it('should delete an interaction', async () => {
-    const created = await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439015', Likes: 1 });
+    const created = await CommunityInteraction.create({ documentId: '507f1f77bcf86cd799439015', likes: ['507f1f77bcf86cd799439095'] });
 
     const res = await request(app).delete(`/api/community/${created._id}`);
     expect(res.statusCode).toBe(200);
@@ -57,7 +57,7 @@ describe('CommunityInteraction API CRUD', () => {
     // Step 2: Link comment in interaction
     const community = await CommunityInteraction.create({
       documentId: '507f1f77bcf86cd799439016',
-      Likes: 10,
+      likes: ['507f1f77bcf86cd799439094'],
       comments: [comment._id]
     });
 
@@ -65,7 +65,7 @@ describe('CommunityInteraction API CRUD', () => {
     const res = await request(app).get(`/api/community/${community._id}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.Likes).toBe(10);
+    expect(res.body.likes).toContain('507f1f77bcf86cd799439094');
     expect(res.body.comments).toBeDefined();
     expect(res.body.comments.length).toBe(1);
     expect(res.body.comments[0].comment).toBe('This is a linked comment.');

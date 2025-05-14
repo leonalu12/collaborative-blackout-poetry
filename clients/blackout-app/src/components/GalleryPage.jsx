@@ -65,18 +65,26 @@ export default function GalleryPage() {
     setCommentText('');
   };
 
-  const handleLike = async (docId) => {
-    try {
-      await axios.put(`${API_BASE}api/interactions/${docId}/like`, { userId });
-    } catch (err) {
-      console.error('Error liking:', err);
-    }
-  };
+const handleLike = async (docId) => {
+  try {
+    await axios.put(`${API_BASE}api/community/${docId}/like`, { userId });
+
+    // Fetch updated like list
+    const res = await axios.get(`${API_BASE}api/community/${docId}/likes`);
+    const updatedLikes = res.data.likes || [];
+
+    setLikeCount(updatedLikes.length);
+    setLiked(updatedLikes.includes(userId));
+    console.log('Updated likes:', updatedLikes);
+  } catch (err) {
+    console.error('Error liking:', err);
+  }
+};
 
   const handleComment = async (docId) => {
     if (!commentText.trim()) return;
     try {
-      await axios.post(`${API_BASE}api/interactions/${docId}/comments`, {
+      await axios.post(`${API_BASE}api/community/${docId}/comments`, {
         userId,
         comment: commentText
       });

@@ -10,25 +10,20 @@ export default function LikeButton({ documentId, initialLikes = [], userId }) {
     setLiked(initialLikes.includes(userId));
   }, [initialLikes, userId]);
 
-  const toggleLike = async () => {
-    try {
-      // optimistically update UI
-      setLiked(v => !v);
-      setCount(c => c + (liked ? -1 : 1));
+const toggleLike = async () => {
+  try {
+    await axios.put(`${API_BASE}api/community/${documentId}/like`, { userId });
 
-      // hit the server
-      await axios.put(
-        `${API_BASE}api/community/${documentId}/like`,
-        { userId }
-      );
-    } catch (err) {
-      console.error('Like toggle failed', err);
-      // rollback on error
-      setLiked(v => !v);
-      setCount(c => c + (liked ? 1 : -1));
-    }
-  };
+    // Fetch updated likes from the server to resolve conflicts
+    const res = await axios.get(`${API_BASE}api/community/${documentId}/likes`);
+    const updatedLikes = res.data.likes || [];
 
+    setLiked(updatedLikes.includes(userId));
+    setCount(updatedLikes.length);
+  } catch (err) {
+    console.error('Like toggle failed', err);
+  }
+};
   return (
     <button
       className={`like-btn ${liked ? 'liked' : ''}`}

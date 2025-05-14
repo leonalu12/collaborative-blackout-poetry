@@ -56,17 +56,36 @@ const deleteInteraction = async (req, res) => {
 // Increment the like count for a document
 const likeInteraction = async (req, res) => {
   try {
-    const { id } = req.params;           // documentId
+    const { id } = req.params; // documentId
     const { userId } = req.body;
 
     let ci = await CommunityInteraction.findOne({ documentId: id });
     if (!ci) {
-      ci = new CommunityInteraction({ documentId: id, Likes: 0, comments: [] });
+      ci = new CommunityInteraction({ documentId: id, likes: [], comments: [] });
     }
-    ci.Likes = (ci.Likes || 0) + 1;
+
+    const hasLiked = ci.likes.includes(userId);
+
+    if (hasLiked) {
+      ci.likes = ci.likes.filter(uid => uid.toString() !== userId);
+    } else {
+      ci.likes.push(userId);
+    }
+
     await ci.save();
 
-    res.status(200).json({ Likes: ci.Likes });
+    res.status(200).json({ likes: ci.likes });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getLikeStatus = async (req, res) => {
+  try {
+    const { id } = req.params; // documentId
+    const interaction = await CommunityInteraction.findOne({ documentId: id });
+    if (!interaction) return res.status(404).json({ likes: [] });
+    res.status(200).json({ likes: interaction.likes || [] });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -99,5 +118,6 @@ module.exports = {
   updateInteraction,
   deleteInteraction,
   likeInteraction,
+  getLikeStatus,
   addComment
 };
