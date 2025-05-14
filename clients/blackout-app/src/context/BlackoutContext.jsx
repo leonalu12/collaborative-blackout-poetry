@@ -8,7 +8,6 @@ export const BlackoutProvider = ({ children }) => {
   const [rawText, setRawText] = useState('This is a sample text for blackout. You can edit or replace it.');
   const [blackoutWords, setBlackoutWords] = useState([]);
   const [formattedText, setFormattedText] = useState('');
-  const [selectedColor, setSelectedColor] = useState('black');
   const [isBlackout, setIsBlackout] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isInGame, setIsInGame] = useState(false);
@@ -80,8 +79,6 @@ export const BlackoutProvider = ({ children }) => {
         setBlackoutWords,
         formattedText,
         setFormattedText,
-        selectedColor,
-        setSelectedColor,
         isBlackout,
         setIsBlackout,
         isGenerating,

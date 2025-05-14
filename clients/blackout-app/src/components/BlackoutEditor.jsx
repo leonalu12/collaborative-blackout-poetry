@@ -34,7 +34,7 @@ function BlackoutEditor( {  }) {
 
   const createRoom = () => {
     navigate('/', { replace: true });
-    const newRoomId = crypto.randomUUID();
+    const newRoomId = Math.floor(100 + Math.random() * 900).toString();
     setRoomId(newRoomId);
 
   };

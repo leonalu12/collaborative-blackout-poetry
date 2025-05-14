@@ -5,8 +5,7 @@ export default function PreviewPanel({ onWordClick}) {
   // This component is responsible for displaying the preview of the blackout text.
  // It receives the words array and a function to handle word clicks as props.
  const{
-  words,
-  selectedColor
+  words
  } = useBlackout();
  
  return (
@@ -18,7 +17,7 @@ export default function PreviewPanel({ onWordClick}) {
           className={`word ${word.isBlackout ? 'blackout' : ''}${word.isSelected ? 'true' : 'false'}`} 
           data-selected={word.isSelected? 'true' : 'false'}//data-* attribute to indicate if the word is selected
           style={{ 
-            border: word.isSelected ? `1px solid ${selectedColor}` : word.isBlackout?'black':'transparent',//selected border color is the selectedColor, if not selected, border color is transparent or black if blackout.
+            border: word.isSelected ? `1px solid black` : word.isBlackout?'black':'transparent',
             backgroundColor: word.isBlackout ? 'black' : 'transparent',
             color: word.isBlackout ? 'black' : 'inherit',
           }}

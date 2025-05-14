@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBlackout } from '../context/BlackoutContext';
-import ColorPicker from './ColorPicker';
 import TextInputPanel from './CreationArea/TextInputPanel';
 import PreviewPanel from './CreationArea/PreviewPanel';
 import CreationControls from './CreationArea/CreationControls';
@@ -34,8 +33,6 @@ export default function BlackoutPage() {
     setBlackoutWords,
     formattedText,
     setFormattedText,
-    selectedColor,
-    setSelectedColor,
     isBlackout,
     setIsBlackout,
     setIsGenerating,
@@ -84,7 +81,6 @@ export default function BlackoutPage() {
   }, [formattedText, blackoutWords]);
 
   // 3) Split and tag
-  // 3) Split and tag
   const initializeText = (text, blackoutArr = []) => {
     const tokens = text.match(/\w+|[^\w\s]|[\s]+/gu) || [];
 
@@ -94,7 +90,6 @@ export default function BlackoutPage() {
         text: token,
         isBlackout: false,
         isSelected: false,
-        selectedColor: selectedColor,
       }));
 
     }
@@ -108,7 +103,6 @@ export default function BlackoutPage() {
           text: token,
           isBlackout: !isBlack,
           isSelected: isBlack,
-          selectedColor,
         };
       });
     }
@@ -311,8 +305,6 @@ export default function BlackoutPage() {
             onGenerate={handleGenerate}
             isInGame={isInGame}
           />
-
-          <ColorPicker onColorChange={setSelectedColor} />
           <button className="custom-color-btn">Your Color</button>
         </div>
 
