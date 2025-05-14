@@ -16,6 +16,12 @@
 .like-btn.liked {
   color: red;
 }
+/* Like button - optional: shrink the count text a bit */
+.like-btn::after {
+  content: attr(data-count);
+  margin-left: 0.2rem;
+  font-size: 0.9rem;
+}
 
 .like-btn .heart {
   font-size: 1.6rem;

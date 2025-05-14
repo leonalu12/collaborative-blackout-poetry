@@ -6,8 +6,76 @@ import '../styles/PoemModal.css';
 import LikeButton from './CommunityInteraction/LikeButton';
 import DocumentProfile from './DocumentProfile';
 import Header from './Header';
+import { tokenize } from '../utils/tokenize';
 
 export default function GalleryPage() {
+  function initializeText(text, blackoutWords = []) {
+    const tokens = text.match(/\w+|[^\w\s][\s]*/gu) || [];
+    return tokens.map((token, idx) => {
+      const isBlack = blackoutWords.some(bw =>
+        idx >= bw.index && idx < bw.index + (bw.length || 1)
+      );
+      return {
+        id: idx,
+        text: token,
+        isBlackout: !isBlack,
+        isSelected: isBlack,
+        selectedColor: '',
+      };
+    });
+  }
+
+  function renderBlackoutText(content, blackoutWords = []) {
+    if (!content) return null;
+
+    const tokens = tokenize(content);
+    const elements = [];
+    let buffer = '';
+    let isBlocking = false;
+
+    tokens.forEach((tok, idx) => {
+      const shouldShow = blackoutWords.some(bw =>
+        idx >= bw.index && idx < bw.index + (bw.length || 1)
+      );
+
+      if (tok === '\n') {
+        if (isBlocking && buffer) {
+          elements.push(
+            <span key={`blk-${idx}`} className="blackout-word">{buffer}</span>
+          );
+          buffer = '';
+          isBlocking = false;
+        }
+        elements.push(<br key={`br-${idx}`} />);
+        return;
+      }
+
+      if (shouldShow) {
+        if (isBlocking && buffer) {
+          elements.push(
+            <span key={`blk-${idx}`} className="blackout-word">{buffer}</span>
+          );
+          buffer = '';
+          isBlocking = false;
+        }
+        elements.push(
+          <span key={`vis-${idx}`} className="visible-word">{tok}</span>
+        );
+      } else {
+        buffer += tok;
+        isBlocking = true;
+      }
+    });
+
+    if (isBlocking && buffer) {
+      elements.push(
+        <span key="blk-end" className="blackout-word">{buffer}</span>
+      );
+    }
+
+    return <p className="blackout-text">{elements}</p>;
+  }
+
   const API_BASE = import.meta.env.VITE_API_BASE;
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user?.id;
@@ -61,6 +129,11 @@ export default function GalleryPage() {
     setSelectedDoc(doc);
   };
 
+  const closeModal = () => {
+    setSelectedDoc(null);
+    setCommentText('');
+  };
+
   const updateDocumentFromServer = async (docId) => {
     try {
       const res = await axios.get(`${API_BASE}api/documents/${docId}`);
@@ -83,7 +156,7 @@ export default function GalleryPage() {
   return (
     <div className="gallery-wrapper">
       <Header />
-      
+
       <div className="gallery-page">
         <div className="sidebar">
           <Link to="/" className="nav-btn">Blackout</Link>
@@ -99,11 +172,12 @@ export default function GalleryPage() {
                 <div className="doc-card" key={doc._id}>
                   <div onClick={() => handleCardClick(doc)}>
                     <h3>{doc.documentName}</h3>
-                    <p>{doc.content?.slice(0, 80)}...</p>
+                    {renderBlackoutText(doc.content, doc.blackoutWords || [])}
                   </div>
+
                   <div className="card-footer">
-                    <Link 
-                      to={`/${doc._id}`} 
+                    <Link
+                      to={`/${doc._id}`}
                       onClick={e => e.stopPropagation()}
                     >
                       <button type="button" className="open-btn">
