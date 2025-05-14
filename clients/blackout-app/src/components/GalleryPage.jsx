@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../styles/GalleryPage.css';
 import '../styles/PoemModal.css';
 import LikeButton from './CommunityInteraction/LikeButton';
+import DocumentProfile from './DocumentProfile';
 import Header from './Header';
 
 export default function GalleryPage() {
@@ -57,7 +58,7 @@ export default function GalleryPage() {
   };
 
   const handleCardClick = (doc) => {
-    //setSelectedDoc(doc);
+    setSelectedDoc(doc);
   };
 
   const closeModal = () => {
@@ -187,96 +188,12 @@ const handleLike = async (docId) => {
         </div>
 
         {selectedDoc && (
-          <div className="modal-overlay" onClick={closeModal}>
-            <div
-              className="modal-box"
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                maxWidth: 480,
-                width: '96vw',
-                minWidth: 280,
-                background: '#03a9f4',
-                borderRadius: 18,
-                padding: '1.2em 1em',
-                margin: 'auto',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.18)'
-              }}
-            >
-              <button className="close-btn" onClick={closeModal}>Back</button>
-
-              <div className="modal-content" style={{ backgroundColor: '#fff', borderRadius: 12, padding: '1em' }}>
-                <h2 style={{ textAlign: 'center' }}>{selectedDoc.documentName}</h2>
-                <p style={{ textAlign: 'center' }}>{selectedDoc.content}</p>
-
-                {filter === 'private' && (
-                  <>
-                    <button onClick={() => handlePublishToggle(selectedDoc._id, selectedDoc.state)}>
-                      {selectedDoc.state === 'public' ? 'Unpublish' : 'Publish'}
-                    </button>
-                    <button onClick={() => handleEdit(selectedDoc)}>Edit</button>
-                  </>
-                )}
-
-                <div className="comment-section" style={{ marginTop: '1em' }}>
-                  <h4>Comments</h4>
-                  <ul>
-                    {selectedDoc.comments?.map((c, i) => (
-                      <li key={i}><strong>{c.userId}</strong>: {c.text}</li>
-                    ))}
-                  </ul>
-                  <input
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Add a comment..."
-                  />
-                  <button onClick={() => handleComment(selectedDoc._id)}>Comment</button>
-                </div>
-              </div>
-
-              {selectedDoc.state === 'private' ? (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
-                  <button onClick={() => handlePublishToggle(selectedDoc._id, selectedDoc.state)}>Publish</button>
-                </div>
-              ) : (
-                <>
-                  <div style={{ display: 'flex', gap: '0.5em', margin: '1em 0' }}>
-                    <button
-                      className={`like-btn ${liked ? 'liked' : ''}`}
-                      onClick={() => handleLike(selectedDoc._id)}
-                    >
-                      ♥ {likeCount}
-                    </button>
-                    <input
-                      className="comment-input"
-                      placeholder="Write a comment..."
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                    />
-                    <button className="post-btn" onClick={() => handleComment(selectedDoc._id)}>Post</button>
-                  </div>
-
-                  <div className="comment-display">
-                    <h4>Past comments :</h4>
-                    {comments.length > 0 ? (
-                      <ul>
-                        {comments.map((c, i) => (
-                          <li key={i}><strong>{c.userId}</strong>: {c.comment}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p style={{ color: '#aaa' }}>No comments yet.</p>
-                    )}
-                  </div>
-                </>
-              )}
-
-              {filter === 'private' && (
-                <div style={{ marginTop: '1em' }}>
-                  <button onClick={() => handleEdit(selectedDoc)}>Edit</button>
-                </div>
-              )}
-            </div>
-          </div>
+          <DocumentProfile
+            selectedDoc={selectedDoc}
+            userId={userId}
+            closeModal={() => setSelectedDoc(null)}
+            refreshDocuments={() => setFilter(filter)} // Optional: if you want to refetch after toggle
+          />
         )}
       </div>
     </div>
