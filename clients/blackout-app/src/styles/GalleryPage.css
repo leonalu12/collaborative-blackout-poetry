@@ -2,21 +2,27 @@
   display: flex;
   height: 100vh;
   font-family: 'Comic Sans MS', sans-serif;
-  background-color: #c9f0ff;
+  background-color: #F5F0E1;
 }
 
 /* Left sidebar */
 .sidebar {
   width: 120px;
-  background-color: #c9f0ff;
+  background-image: url('../../public/spine-texture.png'); /* 替换为生成的图片路径 */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right center;
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  align-items: center; /* 居中按钮 */
+  padding: 1em 0;
   gap: 1em;
+  box-shadow: inset -2px 0 5px rgba(0,0,0,0.1); /* 内阴影模拟书页压痕 */
+  border-right: 2px solid #c2b198; /* 模拟书页边缘 */
 }
 
 .nav-btn {
-  background-color: #79c9ff;
+  background-color: #8B5E3C;
   border: none;
   padding: 0.6em;
   cursor: pointer;
@@ -114,7 +120,7 @@
   line-height: 28px;
   text-align: center;
   font-size: 0.95rem;
-  border: 1px solid #79c9ff;
+  border: 1px solid #A97142;
   border-radius: 4px;
   cursor: pointer;
   user-select: none;
@@ -122,7 +128,7 @@
 }
 
 .pagination .active-page {
-  background-color: #79c9ff;
+  background-color: #A97142;
   color: white;
 }
 

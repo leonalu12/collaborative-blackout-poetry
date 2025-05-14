@@ -221,7 +221,7 @@ export default function BlackoutPage() {
           <button className="nav-btn active">Blackout</button>
           <button className="nav-btn" 
           disabled={isInGame}
-          style={{ backgroundColor: isInGame ? '#ccc' : `#79c9ff`, color: isInGame ? '#666' : '#fff' }}
+          style={{ backgroundColor: isInGame ? '#ccc' : `#8B5E3C`, color: isInGame ? '#666' : '#fff' }}
           onClick={() => navigate('/gallery')
             
           }>Gallery</button>

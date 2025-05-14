@@ -14,7 +14,7 @@
   
   /* 外层蓝色框 */
   .modal-box {
-    background-color: #79c9ff;  
+    background-color: #A97142;  
     width: 300px;
     height: 350px;
     border-radius: 10px;
@@ -44,9 +44,9 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 32px;
+    width: 65px;
     height: 32px;
-    background-color: white;
+    background-color: #8B5E3C;
     border: none;
     border-radius: 6px;
     font-size: 1.1rem;
@@ -95,7 +95,7 @@
 
 /* Comment submit button */
 .post-btn {
-  background-color: #007bff;
+  background-color: #A97142;
   border: none;
   color: white;
   padding: 6px 12px;

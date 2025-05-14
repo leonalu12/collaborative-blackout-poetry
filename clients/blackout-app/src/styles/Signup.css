@@ -79,12 +79,12 @@
   }
   
   .login-link {
-    color: #4da6ff;
+    color: #8B5E3C;
     cursor: pointer;
     text-decoration: underline;
     transition: color 0.2s;
   }
   
   .login-link:hover {
-    color: #80cfff;
+    color: #A97142;
   }
