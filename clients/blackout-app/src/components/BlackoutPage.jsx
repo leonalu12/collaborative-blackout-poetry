@@ -305,7 +305,6 @@ export default function BlackoutPage() {
             onGenerate={handleGenerate}
             isInGame={isInGame}
           />
-          <button className="custom-color-btn">Your Color</button>
         </div>
 
         <div className="preview-area">

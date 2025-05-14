@@ -22,18 +22,19 @@
 
 
 .nav-btn {
-  background-color: #8B5E3C;
-  border: none;
-  padding: 0.6em;
-  cursor: pointer;
+  width: auto;
+  max-width: 85%;
+  margin: 0.5em auto; /* 让按钮居中且有垂直间距 */
+  padding: 0.6em 1.2em;
   font-weight: bold;
   border-radius: 6px;
-  text-align: center;    /* 水平居中 */
-  display: flex;         
-  align-items: center;   
-  justify-content: center; 
-  font-size: 1rem;       
-  line-height: 1.2;      
+  font-size: 1rem;
+  background-color: #8B5E3C;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;    
 }
 
 .nav-btn.active {
@@ -64,13 +65,16 @@
 }
 
 .round-btn {
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  border: none;
+  border-radius: 20px;
+  padding: 1em 1.2em;
   background-color: #8B5E3C;
+  color: white;
   font-weight: bold;
   cursor: pointer;
+  font-size: 1rem;
+  white-space: normal;
+  text-align: center;
+  max-width: 100%; 
 }
 
 .text-box {
@@ -106,15 +110,6 @@
   cursor: pointer;
 }
 
-.custom-color-btn {
-  background-color: #79c9ff;
-  color: white;
-  border: none;
-  margin-top: 0.8em;
-  padding: 0.5em 1em;
-  border-radius: 10px;
-  cursor: pointer;
-}
 
 
 .preview-area {
