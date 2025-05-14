@@ -20,14 +20,22 @@
   box-shadow: inset -2px 0 5px rgba(0,0,0,0.1); /* 内阴影模拟书页压痕 */
   border-right: 2px solid #c2b198; /* 模拟书页边缘 */
 }
-
+.content-area h2 {
+  color: black !important;
+}
 .nav-btn {
+  display: block;           
+  box-sizing: border-box;   
+  width: 100%;    
   background-color: #8B5E3C;
   border: none;
   padding: 0.6em;
   cursor: pointer;
   font-weight: bold;
   border-radius: 6px;
+  width: 100%;          
+  text-align: center;
+  font-size: 16px; 
 }
 
 .nav-btn.active {
@@ -79,6 +87,10 @@
   justify-content: space-between;
   position: relative;
   aspect-ratio: 1 / 1;
+
+  width: 150px;              /* 明确指定宽度 */
+  height: 160px;             /* 固定高度 */
+  overflow: hidden; 
 }
 
 .doc-card h3 {
