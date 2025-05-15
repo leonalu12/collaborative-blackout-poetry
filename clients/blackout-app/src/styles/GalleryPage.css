@@ -1,14 +1,18 @@
+
 .gallery-page {
   display: flex;
   height: 100vh;
   font-family: 'Comic Sans MS', sans-serif;
-  background-color: #F5F0E1;
+  background-image: url('/kraft-paper-texture.png');
+  background-size: cover;
+  background-repeat: repeat; 
+  background-position: center center;
 }
 
 /* Left sidebar */
 .sidebar {
   width: 120px;
-  background-image: url('../../public/spine-texture.png'); /* 替换为生成的图片路径 */
+  background-image: url('../../public/spine-texture.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: right center;
@@ -17,7 +21,7 @@
   align-items: center; /* 居中按钮 */
   padding: 1em 0;
   gap: 1em;
-  box-shadow: inset -2px 0 5px rgba(0,0,0,0.1); /* 内阴影模拟书页压痕 */
+  box-shadow: inset -2px 0 5px rgba(0,0,0,0.1); 
   border-right: 2px solid #c2b198; /* 模拟书页边缘 */
 }
 .content-area h2 {
@@ -62,7 +66,7 @@
 /* White content box */
 .gallery-content-box {
   position: relative;
-  background-color: white;
+  background-color: #F5F0E1;
   padding: 2em 2em 3.5em 2em;
   border-radius: 15px;
   margin-top: 1em;
