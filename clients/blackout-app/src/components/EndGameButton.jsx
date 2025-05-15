@@ -25,6 +25,7 @@ const EndGameButton = () => {
         
         // updateRoomState({ rawText:'New game started!', words:[], isInGame:false }); // Update the room state to reflect the end of the game
         updateRoomState({
+            title: '',
             rawText: '',
             formattedText: '',
             blackoutWords: [],
