@@ -79,8 +79,7 @@ const SaveModal = ({ isOpen, onClose, title, words, rawText, documentId }) => {
       <div className="save-confirmation-content">
         <h3>Where would you like to save your blackout poem?</h3>
         <div className="save-buttons">
-          <button onClick={handleSaveToPrivate}>Save to Private</button>
-          <button onClick={handlePublishToGallery}>Publish</button>
+          <button onClick={handlePublishToGallery}>To the Gallery!</button>
           <button onClick={handleSaveAsJPG}>Save as JPG</button>
         </div>
         <button className="close-btn" onClick={onClose}>X</button>

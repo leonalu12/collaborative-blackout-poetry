@@ -161,7 +161,7 @@ export default function GalleryPage() {
         <div className="sidebar">
           <Link to="/" className="nav-btn">Blackout</Link>
           <button className={`nav-btn ${filter === 'public' ? 'active' : ''}`} onClick={() => handleFilter('public')}>Public</button>
-          <button className={`nav-btn ${filter === 'private' ? 'active' : ''}`} onClick={() => handleFilter('private')}>Private</button>
+          {/* <button className={`nav-btn ${filter === 'private' ? 'active' : ''}`} onClick={() => handleFilter('private')}>Private</button> */}
         </div>
 
         <div className="content-area">

@@ -12,10 +12,11 @@
 }
 
 .save-confirmation-content {
+  position: relative;
   background-color: white;
   padding: 24px;
   border-radius: 10px;
-  width: 460px; /* 👈 宽一点，给三个按钮足够空间 */
+  width: 460px; 
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -49,6 +50,9 @@
 }
 
 .close-btn {
+  position: absolute; 
+  top: 10px;
+  left: 10px; 
   background-color: transparent;
   border: none;
   color: #888;
