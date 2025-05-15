@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { tokenize } from '../utils/tokenize';
 import '../styles/DocumentProfile.css';
 
-export default function DocumentProfile({ selectedDoc, userId, closeModal, filter }) {
+export default function DocumentProfile({ selectedDoc, selectedDocBlackoutWords, userId, closeModal, filter }) {
   const API_BASE = import.meta.env.VITE_API_BASE;
 
   const [commentText, setCommentText] = useState('');
@@ -71,6 +72,63 @@ export default function DocumentProfile({ selectedDoc, userId, closeModal, filte
       console.error('Error fetching document for editing:', err);
     }
   };
+function renderBlackoutText(content, blackoutWords = []) {
+  if (!content) return null;
+
+  const tokens = tokenize(content); // e.g. splits into words, punctuation, whitespace, "\n"…
+  const elements = [];
+  let buffer = '';
+  let isBlocking = false;
+
+  const flushBuffer = () => {
+    if (isBlocking && buffer) {
+      elements.push(
+        <span key={`blk-${elements.length}`} className="document-profile-blackout-word">
+          {buffer}
+        </span>
+      );
+      buffer = '';
+      isBlocking = false;
+    }
+  };
+
+  tokens.forEach((tok, idx) => {
+    if (tok === '\n') {
+      // hard line-break: flush any pending blackout, then emit <br/>
+      flushBuffer();
+      elements.push(<br key={`br-${idx}`} />);
+      return;
+    }
+
+    const shouldShow = blackoutWords.some(bw =>
+      idx >= bw.index && idx < bw.index + (bw.length || 1)
+    );
+
+    if (shouldShow) {
+      // visible token → flush blackout, then render itself
+      flushBuffer();
+      elements.push(
+        <span key={`vis-${idx}`} className="document-profile-visible-word">
+          {tok}
+        </span>
+      );
+    } else {
+      // hidden token → accumulate
+      buffer += tok;
+      isBlocking = true;
+    }
+  });
+
+  // flush any leftover at end
+  flushBuffer();
+
+  return (
+    <p className="document-profile-blackout-text" style={{ whiteSpace: 'pre-wrap' }}>
+      {elements}
+    </p>
+  );
+}
+
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
@@ -82,7 +140,7 @@ export default function DocumentProfile({ selectedDoc, userId, closeModal, filte
 
         <div className="modal-content">
           <h2>{selectedDoc.documentName}</h2>
-          <p>{selectedDoc.content}</p>
+          {renderBlackoutText(selectedDoc.content, selectedDocBlackoutWords || [])}
 
           {filter === 'private' && (
             <>

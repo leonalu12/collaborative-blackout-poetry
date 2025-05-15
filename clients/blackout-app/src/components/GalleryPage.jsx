@@ -214,6 +214,7 @@ export default function GalleryPage() {
         {selectedDoc && (
           <DocumentProfile
             selectedDoc={documents.find(doc => doc._id === selectedDoc._id) || selectedDoc}
+            selectedDocBlackoutWords={selectedDoc.blackoutWords || []}
             userId={userId}
             closeModal={() => setSelectedDoc(null)}
             filter={filter}

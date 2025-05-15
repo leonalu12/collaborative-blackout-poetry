@@ -65,3 +65,43 @@
 .comment-display h4 {
   color: black;
 }
+
+/* Blackout text container */
+.document-profile-blackout-text {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap; 
+  font-size: 16px;
+  color: black;
+  text-align: justify;
+}
+
+/* 被遮盖的单词 */
+.document-profile-blackout-word {
+  display: inline;
+  background-color: black;
+  color: black;
+  padding: 0 2px;
+  margin: 0 2px 0 0; 
+  border-radius: 2px;
+  text-align: justify;
+}
+
+/* 可见的单词 */
+.document-profile-visible-word {
+  display: inline;
+  background-color: white;
+  color: black;
+  padding: 0 2px;
+  margin: 0 2px 0 0; 
+  border-radius: 2px;
+  text-align: justify;
+}
+
+/* Container to force blackout text into a scrollable square */
+.document-profile-blackout-container {
+  width: 300px;        /* desired square width */
+  height: 300px;       /* same as width for a square */
+  overflow: auto;      /* scroll if content overflows */
+  margin-bottom: 1rem; /* spacing below if needed */
+}
