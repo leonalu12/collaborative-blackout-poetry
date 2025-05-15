@@ -5,7 +5,7 @@ Welcome to the CS732 project. We look forward to you testing our project.
 | Name              | Email                          | Git Accounts |
 | ----------------- | ------------------------------ | ----------- |
 | Shiyun Lu         | slu961@aucklanduni.ac.nz       | slu961 or leonalu12      |
-| Jiaxin Liu        | jilu916@aucklanduni.ac.nz      | jilu916     |
+| Jiaxin Liu        | jilu916@aucklanduni.ac.nz      | jilu916 or JiaxinLiu-916    |
 | Xindi Hu          | xhu694@aucklanduni.ac.nz       | Punchilion  or Ogi0317    |
 | Zhiliang Luo      | zluo443@aucklanduni.ac.nz      | zluo443 or SnowMoo     |
 | Luis Rodriguez    | lrdo555@aucklanduni.ac.nz      | lrdo555 or luchiwards    |
