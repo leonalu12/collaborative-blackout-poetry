@@ -1,4 +1,4 @@
-// src/components/StatusView.jsx
+
 import React from 'react';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';

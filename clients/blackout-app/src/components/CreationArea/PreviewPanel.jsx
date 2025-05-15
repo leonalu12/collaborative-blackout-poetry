@@ -1,9 +1,7 @@
 import React from 'react';
-import { useBlackout  } from '../../context/BlackoutContext'; // Import the BlackoutContext to access the blackout state and functions
+import { useBlackout  } from '../../context/BlackoutContext'; 
 
 export default function PreviewPanel({ onWordClick}) {
-  // This component is responsible for displaying the preview of the blackout text.
- // It receives the words array and a function to handle word clicks as props.
  const{
   words
  } = useBlackout();
@@ -15,7 +13,7 @@ export default function PreviewPanel({ onWordClick}) {
         <span 
           key={idx}
           className={`word ${word.isBlackout ? 'blackout' : ''}${word.isSelected ? 'true' : 'false'}`} 
-          data-selected={word.isSelected? 'true' : 'false'}//data-* attribute to indicate if the word is selected
+          data-selected={word.isSelected? 'true' : 'false'}
           style={{ 
             border: word.isSelected ? `1px solid black` : word.isBlackout?'black':'transparent',
             backgroundColor: word.isBlackout ? 'black' : 'transparent',

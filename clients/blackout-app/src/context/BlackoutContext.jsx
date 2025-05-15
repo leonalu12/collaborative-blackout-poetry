@@ -26,7 +26,7 @@ export const BlackoutProvider = ({ children }) => {
       words,
       isBlackout,
       isInGame,
-      ...updatedFields, // 局部更新
+      ...updatedFields, 
     };
     setTitle(nextState.title);
     setRawText(nextState.rawText);
@@ -56,7 +56,7 @@ export const BlackoutProvider = ({ children }) => {
     };
   }, []);
 
-  // 🔹 在初始加载时自动从 localStorage 中恢复用户信息
+  
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {

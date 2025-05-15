@@ -1,5 +1,5 @@
 import React from 'react';
-import { useBlackout } from '../../context/BlackoutContext'; // Import the BlackoutContext to access the blackout state and functions
+import { useBlackout } from '../../context/BlackoutContext'; 
 
 
 export default function TextInputPanel({

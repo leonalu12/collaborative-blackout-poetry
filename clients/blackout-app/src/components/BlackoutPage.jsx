@@ -48,7 +48,7 @@ export default function BlackoutPage() {
     roomId,
     joinedRoom
   } = useBlackout();
-  const fileInputRef = useRef(null); // 用于文件上传的引用
+  const fileInputRef = useRef(null); 
 
 // 1) Fetch doc + blackoutWords
   useEffect(() => {
@@ -108,24 +108,24 @@ export default function BlackoutPage() {
     }
   };
 
-    // This function is called when the user clicks on a word in the preview panel.
+   
   const handleWordClick = (wordId) => {
-    if (isBlackout) return; // Do nothing if blackout is active
+    if (isBlackout) return; 
     const newWords = words.map(word =>
       word.id === wordId ? { ...word, isSelected: !word.isSelected } : word)
-    // Toggle the selected state of the clicked word
+  
     setWords(newWords);
     updateRoomState({ words: newWords }); // Update the room state with the new words
   };
 
-  // This function is called when a word is clicked. It toggles the blackout state of the selected word.
+  
   const handleBlackout = () => {
     const updatedWords = words.map(word => {
       if (isBlackout) {
-        //已涂黑，取消单词涂黑
+       
         return { ...word, isBlackout: false };
       } else {
-        //未涂黑，涂黑单词
+        
         return word.isSelected
           ? { ...word, isBlackout: false } // Keep selected words
           : { ...word, isBlackout: true }; // Blackout everything else
@@ -140,7 +140,7 @@ export default function BlackoutPage() {
   }
 
   const handleLoadRandomPoem = async () => {
-    if (isInGame) return; // 🚫 禁止修改 rawText
+    if (isInGame) return; 
     try {
       const res = await fetch(`${API_BASE}api/documents/random`);
       if (!res.ok) throw new Error('Failed to fetch random document');
@@ -163,7 +163,7 @@ export default function BlackoutPage() {
 
 
   const handleUploadText = (text) => {
-    if (isInGame) return; // 🚫 已锁定，不允许上传替换 rawText
+    if (isInGame) return; 
     setRawText(text);
     setFormattedText('');
     setIsBlackout(false);
@@ -201,7 +201,7 @@ export default function BlackoutPage() {
       updateRoomState({ rawText: text })
     } catch (err) {
       console.error("Generation failed:", err);
-      // TODO: show a UI toast or inline error message
+    
     } finally {
       setIsGenerating(false);
     }
@@ -271,7 +271,7 @@ export default function BlackoutPage() {
                     <button
                       className="confirm-btn"
                       onClick={() => {
-                        setRawText(tempImageText); // 把识别的文本填入主输入框
+                        setRawText(tempImageText); 
                         setShowUploadImagePopup(false);
                         setTempImageText('');
                       }}

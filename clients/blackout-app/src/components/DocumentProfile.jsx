@@ -161,17 +161,17 @@ function renderBlackoutText(content, blackoutWords = []) {
               >
                 ♥ {likeCount}
               </button>
-              <input
+              {/* <input
                 className="comment-input"
                 placeholder="Write a comment..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 style={{ flex: 1 }}
-              />
-              <button className="post-btn" onClick={handleComment}>Post</button>
+              /> */}
+              {/* <button className="post-btn" onClick={handleComment}>Post</button> */}
             </div>
 
-            <div className="comment-display">
+            {/* <div className="comment-display">
               
               {comments.length > 0 ? (
                 <ul>
@@ -182,7 +182,7 @@ function renderBlackoutText(content, blackoutWords = []) {
               ) : (
                 <p style={{ color: '#aaa' }}>No comments yet.</p>
               )}
-            </div>
+            </div> */}
           </div>
         )}
       </div>

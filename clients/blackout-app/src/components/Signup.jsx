@@ -24,7 +24,7 @@ const Signup = () => {
   
     const { name, email, password } = form;
   
-    // ✅ Handle empty fields
+    //  Handle empty fields
     if (!name || !email || !password) {
       setError('All fields are required.');
       return;

@@ -86,8 +86,9 @@ const handleSaveToGallery = async () => {
           <button onClick={handleSaveAsJPG}>
             Save as JPG
           </button>
+          
         </div>
-        <button className="close-btn" onClick={onClose}>Cancel</button>
+        <button className="close-btn" onClick={onClose}>X</button>
       </div>
     </div>
   );
