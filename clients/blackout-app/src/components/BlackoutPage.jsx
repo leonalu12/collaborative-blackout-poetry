@@ -221,9 +221,9 @@ export default function BlackoutPage() {
           <button className="nav-btn active">Blackout</button>
           <button className="nav-btn" 
           disabled={isInGame}
+          title={isInGame ? 'Press Start New Game to get access to Gallery' : ''}
           style={{ backgroundColor: isInGame ? '#ccc' : `#8B5E3C`, color: isInGame ? '#666' : '#fff' }}
           onClick={() => navigate('/gallery')
-            
           }>Gallery</button>
           <div>
             <BlackoutEditor />
