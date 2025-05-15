@@ -1,0 +1,67 @@
+.modal-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  max-width: 800px;
+  width: 96vw;
+  min-width: 320px;
+  min-height: 600px;
+  height: 80vh;
+  background: #D2C0AB;
+  border-radius: 18px;
+  padding: 1.5em 2em;
+  margin: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5em;
+  flex: 2 1 auto;
+  overflow-y: auto;
+  margin-bottom: 1em;
+}
+
+.modal-content h2,
+.modal-content p {
+  color: black;
+  text-align: center;
+}
+
+.comment-section {
+  flex: 0 0 auto;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+.comment-display {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 1em;
+}
+
+.comment-display ul {
+  margin: 0.5em 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment-display li {
+  padding: 0.3em 0;
+}
+
+.comment-display h4 {
+  color: black;
+}

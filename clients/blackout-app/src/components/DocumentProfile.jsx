@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../styles/DocumentProfile.css';
 
 export default function DocumentProfile({ selectedDoc, userId, closeModal, filter }) {
   const API_BASE = import.meta.env.VITE_API_BASE;
@@ -76,35 +77,12 @@ export default function DocumentProfile({ selectedDoc, userId, closeModal, filte
       <div
         className="modal-box"
         onClick={(e) => e.stopPropagation()}
-        style={{
-          maxWidth: 800,
-          width: '96vw',
-          minWidth: 320,
-          minHeight: '600px',
-          height: '80vh',
-          background: '#D2C0AB',
-          borderRadius: 18,
-          padding: '1.5em 2em',
-          margin: 'auto',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-          maxHeight: '90vh',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1em'
-        }}
       >
         <button className="close-btn" onClick={closeModal}>Back</button>
 
-        <div className="modal-content" style={{ 
-          backgroundColor: '#fff', 
-          borderRadius: 12, 
-          padding: '1.5em',
-          flex: '2 1 auto',
-          overflowY: 'auto',
-          marginBottom: '1em'
-        }}>
-          <h2 style={{ textAlign: 'center', marginBottom: '1em' }}>{selectedDoc.documentName}</h2>
-          <p style={{ textAlign: 'center' }}>{selectedDoc.content}</p>
+        <div className="modal-content">
+          <h2>{selectedDoc.documentName}</h2>
+          <p>{selectedDoc.content}</p>
 
           {filter === 'private' && (
             <>
@@ -117,8 +95,8 @@ export default function DocumentProfile({ selectedDoc, userId, closeModal, filte
         </div>
 
         {selectedDoc.state !== 'private' && (
-          <div style={{ flex: '0 0 auto' }}>
-            <div style={{ display: 'flex', gap: '0.5em', marginBottom: '1em' }}>
+          <div className="comment-section">
+            <div className="comment-actions">
               <button
                 className={`like-btn ${liked ? 'liked' : ''}`}
                 onClick={handleLike}
@@ -135,16 +113,12 @@ export default function DocumentProfile({ selectedDoc, userId, closeModal, filte
               <button className="post-btn" onClick={handleComment}>Post</button>
             </div>
 
-            <div className="comment-display" style={{ 
-              maxHeight: '250px',
-              overflowY: 'auto',
-              marginTop: '1em'
-            }}>
-              <h4>Past comments :</h4>
+            <div className="comment-display">
+              
               {comments.length > 0 ? (
-                <ul style={{ margin: '0.5em 0', padding: 0, listStyle: 'none' }}>
+                <ul>
                   {comments.map((c, i) => (
-                    <li key={i} style={{ padding: '0.3em 0' }}><strong>{c.userId}</strong>: {c.comment || c.text}</li>
+                    <li key={i}><strong>{c.userId}</strong>: {c.comment || c.text}</li>
                   ))}
                 </ul>
               ) : (
