@@ -46,7 +46,11 @@
 /* Right content area */
 .content-area {
   flex: 1;
-  padding: 2em;
+  padding: 0em 2em 0em 2em;   display: flex;
+  flex-direction: column;
+  align-items: center; /* 水平居中 */
+  justify-content: flex-start; 
+  min-height: 100vh;
 }
 
 .content-area h1 {
@@ -63,7 +67,7 @@
   border-radius: 15px;
   margin-top: 1em;
   width: 700px;
-  height: 400px;
+  min-height: 400px; /* 保底高度 */
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
@@ -176,6 +180,10 @@
   white-space: pre-wrap; 
   font-size: 16px;
   color: black;
+  display: -webkit-box;      
+  -webkit-line-clamp: 4;      
+  -webkit-box-orient: vertical; 
+  overflow: hidden;         
 }
 
 /* 被遮盖的单词 */
