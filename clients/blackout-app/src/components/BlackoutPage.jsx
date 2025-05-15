@@ -328,10 +328,10 @@ export default function BlackoutPage() {
         <SaveModal
           isOpen={showSaveConfirmation}
           onClose={() => setShowSaveConfirmation(false)}
-          title={title}  // ✅ 传递标题
-          words={words}  // ✅ 传递 blackout 处理的文本
-          rawText={rawText}  // ✅ 传入 rawText
-          documentId={id}  // ✅ 传入当前文档 ID
+          title={title} 
+          words={words} 
+          rawText={rawText} 
+          documentId={id} 
         />
 
         {joinedRoom && (

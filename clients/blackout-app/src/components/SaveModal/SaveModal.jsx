@@ -2,55 +2,54 @@ import React from 'react';
 import './SaveModal.css';
 import html2canvas from 'html2canvas';
 
-
 const SaveModal = ({ isOpen, onClose, title, words, rawText, documentId }) => {
-
   const API_BASE = import.meta.env.VITE_API_BASE;
   if (!isOpen) return null;
 
-const handleSaveToGallery = async () => {
-  console.log("rawText:", rawText);
-  if (!title?.trim()) {
-    alert("Please enter a title before saving!");
-    return;
-  }
+  const getBlackoutWords = () =>
+    words
+      .filter(word => !word.isBlackout)
+      .map(word => ({ index: word.id, text: word.text }));
 
-  if (!words || words.length === 0) {
-    alert("No blackout words selected!");
-    return;
-  }
+  const saveDocument = async (state) => {
+    if (!title?.trim()) {
+      alert("Please enter a title before saving!");
+      return;
+    }
 
-  const blackoutWordsArray = words
-    .filter(word => !word.isBlackout)
-    .map(word => ({ index: word.id, text: word.text }));
+    if (!words || words.length === 0) {
+      alert("No blackout words selected!");
+      return;
+    }
 
-    console.log("Saving blackoutWords:", blackoutWordsArray.map(w => `${w.index}: ${w.text}`));
+    const blackoutWordsArray = getBlackoutWords();
+    console.log(`${state === "public" ? "Publishing" : "Saving"} blackoutWords:`, blackoutWordsArray.map(w => `${w.index}: ${w.text}`));
 
     const method = documentId ? 'PUT' : 'POST';
     const url = documentId ? `${API_BASE}api/documents/${documentId}` : `${API_BASE}api/documents`;
 
-  try {
-    const response = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        documentName: title,
-        content: rawText,
-        blackoutWords: blackoutWordsArray,
-        state: "public",
-      }),
-    });
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentName: title,
+          content: rawText,
+          blackoutWords: blackoutWordsArray,
+          state,
+        }),
+      });
 
-    if (!response.ok) throw new Error("Failed to save");
+      if (!response.ok) throw new Error("Failed to save");
+      onClose();
+    } catch (error) {
+      console.error("Save error:", error);
+      alert("Error saving document.");
+    }
+  };
 
-    alert("Saved to gallery successfully!");
-    onClose();
-  } catch (error) {
-    console.error("Save error:", error);
-    alert("Error saving document.");
-  }
-};
-
+  const handleSaveToPrivate = () => saveDocument("private");
+  const handlePublishToGallery = () => saveDocument("public");
 
   const handleSaveAsJPG = async () => {
     try {
@@ -80,13 +79,9 @@ const handleSaveToGallery = async () => {
       <div className="save-confirmation-content">
         <h3>Where would you like to save your blackout poem?</h3>
         <div className="save-buttons">
-          <button onClick={handleSaveToGallery}>
-            Save to Gallery
-          </button>
-          <button onClick={handleSaveAsJPG}>
-            Save as JPG
-          </button>
-          
+          <button onClick={handleSaveToPrivate}>Save to Private</button>
+          <button onClick={handlePublishToGallery}>Publish</button>
+          <button onClick={handleSaveAsJPG}>Save as JPG</button>
         </div>
         <button className="close-btn" onClick={onClose}>X</button>
       </div>
