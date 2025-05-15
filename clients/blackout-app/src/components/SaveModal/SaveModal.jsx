@@ -3,7 +3,7 @@ import './SaveModal.css';
 import html2canvas from 'html2canvas';
 
 
-const SaveModal = ({ isOpen, onClose, title, words, rawText }) => {
+const SaveModal = ({ isOpen, onClose, title, words, rawText, documentId }) => {
 
   const API_BASE = import.meta.env.VITE_API_BASE;
   if (!isOpen) return null;
@@ -26,13 +26,16 @@ const handleSaveToGallery = async () => {
 
     console.log("Saving blackoutWords:", blackoutWordsArray.map(w => `${w.index}: ${w.text}`));
 
+    const method = documentId ? 'PUT' : 'POST';
+    const url = documentId ? `${API_BASE}api/documents/${documentId}` : `${API_BASE}api/documents`;
+
   try {
-    const response = await fetch(`${API_BASE}api/documents`, {
-      method: "POST",
+    const response = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         documentName: title,
-        content: rawText,  // 这里传递的是 content，确保后端接收的是 content 字段
+        content: rawText,
         blackoutWords: blackoutWordsArray,
         state: "public",
       }),
